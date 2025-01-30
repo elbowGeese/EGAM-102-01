@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PauseHandler : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class PauseHandler : MonoBehaviour
     void Start()
     {
         ClosePauseMenu();
+        pauseButton.SetActive(false);
+
+        CountdownHandler.onCountdownDone += OpenPauseButton;
     }
 
     // opens the pause menu and hides the pause button
@@ -27,8 +31,19 @@ public class PauseHandler : MonoBehaviour
     public void ClosePauseMenu()
     {
         pauseMenu.SetActive(false);
-        pauseButton.SetActive(true);
 
         Time.timeScale = 1f;
+    }
+
+    // called onCountdownDone
+    public void OpenPauseButton()
+    {
+        pauseButton.SetActive(true);
+    }
+
+    // fucking unsubscribe dont throw errors on scene change
+    public void DisableCountdownListener()
+    {
+        CountdownHandler.onCountdownDone -= OpenPauseButton;
     }
 }
