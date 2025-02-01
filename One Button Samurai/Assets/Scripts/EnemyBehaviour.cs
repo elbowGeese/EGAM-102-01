@@ -6,6 +6,10 @@ using Random = UnityEngine.Random;
 
 public class EnemyBehaviour : MonoBehaviour
 {
+    // components
+    private Animator anim;
+
+    // variables
     public enum EnemyStates { IDLE, CHARGE, ATTACK, UNGUARDED, DEAD };
     public EnemyStates state;
 
@@ -23,12 +27,15 @@ public class EnemyBehaviour : MonoBehaviour
 
     public float timer = 0f;
 
+    // event actions
     public static event Action onPlayerHitEnemy;
     public static event Action onPlayerMissEnemy;
     public static event Action onEnemyHitPlayer;
 
     void Start()
     {
+        anim = GetComponent<Animator>();
+
         EnableListeners();
 
         ChangeStateIdle();
@@ -128,6 +135,11 @@ public class EnemyBehaviour : MonoBehaviour
 
         timer = 0f;
         idleTime = Random.Range(minIdleTime, maxIdleTime);
+
+        anim.ResetTrigger("charge");
+        anim.ResetTrigger("attack");
+        anim.ResetTrigger("guardbroke");
+        anim.ResetTrigger("block");
     }
 
     public void ChangeStateCharge()
@@ -135,6 +147,8 @@ public class EnemyBehaviour : MonoBehaviour
         state = EnemyStates.CHARGE;
 
         timer = 0f;
+
+        anim.SetTrigger("charge");
     }
 
     public void ChangeStateAttack()
@@ -142,6 +156,7 @@ public class EnemyBehaviour : MonoBehaviour
         state = EnemyStates.ATTACK;
 
         timer = 0f;
+        anim.SetTrigger("attack");
     }
 
     public void ChangeStateUnguarded()
@@ -149,12 +164,17 @@ public class EnemyBehaviour : MonoBehaviour
         state = EnemyStates.UNGUARDED;
 
         timer = 0f;
+        anim.SetTrigger("guardbroke");
     }
 
     public void ChangeStateDead()
     {
         state = EnemyStates.DEAD;
+        anim.SetBool("isDead", true);
+    }
 
+    public void EnemyDied()
+    {
         // end game
         GameObject.Find("SceneHandler").GetComponent<SceneHandler>().GoToScene("WinScene");
     }
@@ -183,6 +203,7 @@ public class EnemyBehaviour : MonoBehaviour
             ChangeStateIdle();
 
             // block animation
+            anim.SetTrigger("block");
         }
     }
 }

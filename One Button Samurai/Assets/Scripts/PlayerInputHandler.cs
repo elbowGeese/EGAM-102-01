@@ -5,6 +5,9 @@ using System;
 
 public class PlayerInputHandler : MonoBehaviour
 {
+    // components
+    private Animator anim;
+
     // variables
     public enum PlayerStates { IDLE, ATTACK, UNGUARDED, DEAD };
     public PlayerStates state;
@@ -19,6 +22,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     void Start()
     {
+        anim = GetComponent<Animator>();
+
         EnableListeners();
 
         ChangeStateIdle();
@@ -89,6 +94,9 @@ public class PlayerInputHandler : MonoBehaviour
     {
         Debug.Log("PLAYER IDLE");
         state = PlayerStates.IDLE;
+
+        anim.ResetTrigger("attack");
+        anim.ResetTrigger("block");
     }
 
     public void ChangeStateAttack()
@@ -103,13 +111,17 @@ public class PlayerInputHandler : MonoBehaviour
     public void PlayerHitEnemy()
     {
         Debug.Log("PLAYER HIT ENEMY");
+
         ChangeStateIdle();
+        anim.SetTrigger("attack");
     }
 
     public void PlayerMissEnemy()
     {
         Debug.Log("PLAYER MISS ENEMY");
+
         ChangeStateUnguarded();
+        anim.SetTrigger("block");
     }
 
     public void ChangeStateUnguarded()
@@ -125,6 +137,12 @@ public class PlayerInputHandler : MonoBehaviour
         Debug.Log("PLAYER DEAD");
         state = PlayerStates.DEAD;
 
+        // animation
+        anim.SetBool("isDead", true);
+    }
+
+    public void PlayerDied()
+    {
         // end game
         GameObject.Find("SceneHandler").GetComponent<SceneHandler>().GoToScene("LoseScene");
     }

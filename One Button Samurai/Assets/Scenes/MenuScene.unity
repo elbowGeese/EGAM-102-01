@@ -293,8 +293,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: PLAY
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ea6944bd907c994ab91e8a978f6004e, type: 2}
+  m_sharedMaterial: {fileID: 719099725832968050, guid: 5ea6944bd907c994ab91e8a978f6004e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -624,8 +624,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: ONE BUTTON SAMURAI
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ea6944bd907c994ab91e8a978f6004e, type: 2}
+  m_sharedMaterial: {fileID: 719099725832968050, guid: 5ea6944bd907c994ab91e8a978f6004e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -649,7 +649,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90.4
+  m_fontSize: 105.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -759,17 +759,17 @@ MonoBehaviour:
   m_text: 'HOW TO PLAY:
 
 
-    ONLY ONE BUTTON
+    ONLY ONE BUTTON (SPACE)
 
 
-    WHEN THE ENEMY STRIKES, BLOCK
+    WHEN THE ENEMY STRIKES,
+    BLOCK
 
 
-    WHEN
-    THE ENEMY IS OPEN, STRIKE!'
+    WHEN THE ENEMY IS OPEN, STRIKE!'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ea6944bd907c994ab91e8a978f6004e, type: 2}
+  m_sharedMaterial: {fileID: 719099725832968050, guid: 5ea6944bd907c994ab91e8a978f6004e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
