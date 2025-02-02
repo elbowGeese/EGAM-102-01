@@ -2361,8 +2361,8 @@ MonoBehaviour:
   maxIdleTime: 4
   idleTime: 0
   chargeTime: 0.4
-  attackTime: 0.2
-  unguardedTime: 1
+  attackTime: 0.06
+  unguardedTime: 0.5
   timer: 0
 --- !u!95 &2077638102
 Animator:
