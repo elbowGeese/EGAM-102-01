@@ -195,6 +195,10 @@ public class EnemyBehaviour : MonoBehaviour
 
             ChangeStateUnguarded();
         }
+        else if(state == EnemyStates.DEAD)
+        {
+            return;
+        }
         else
         {
             // player miss enemy event
