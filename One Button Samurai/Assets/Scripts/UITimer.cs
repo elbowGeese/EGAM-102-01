@@ -10,16 +10,20 @@ public class UITimer : MonoBehaviour
     public float maxTime = 30f;
     public float timeLeft;
 
+    public bool paused = false;
+
     void Start()
     {
-        timeLeft = maxTime;
+        paused = false;
 
         slider.maxValue = maxTime;
-        slider.value = timeLeft;
+        ResetTimer();
     }
 
     void Update()
     {
+        if (paused) { return; }
+
         if(timeLeft > 0)
         {
             timeLeft -= Time.deltaTime;
@@ -30,6 +34,12 @@ public class UITimer : MonoBehaviour
                 LoseGame();
             }
         }
+    }
+
+    public void ResetTimer()
+    {
+        timeLeft = maxTime;
+        slider.value = timeLeft;
     }
 
     private void LoseGame()

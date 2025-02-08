@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class MoleHandler : MonoBehaviour
 {
@@ -9,7 +11,8 @@ public class MoleHandler : MonoBehaviour
     private HoleBehaviour[] holes;
 
     // moles
-    public int maxNumOfMoles = 5;
+    public int[] maxNumOfMolesInWave;
+    private int currentWave = 0;
     public int currentNumOfMoles;
 
     public GameObject molePrefab;
@@ -18,28 +21,56 @@ public class MoleHandler : MonoBehaviour
     public float maxTimeBetweenMoleSpawn = 2f;
     public float minTimeBetweenMoleSpawn = 0.3f;
     private float timeBetweenMoleSpawn;
-    private float timer;
+    private float moleSpawnTimer;
+
+    public float timeBetweenWaves = 2f;
+
+    private bool paused = false;
 
     // ui
     public TMP_Text moleCountText;
+    public TMP_Text waveText;
+
+    public UITimer uiTimer;
+
+    // sound
+    public AudioSource nextWaveSound;
 
     void Start()
     {
         holes = GameObject.FindObjectsOfType<HoleBehaviour>();
 
-        currentNumOfMoles = maxNumOfMoles;
+        paused = false;
+        currentWave = 0;
+        SetWave(currentWave);
 
         ResetTimer();
-        SetMoleText();
     }
 
     void Update()
     {
-        if(timer < timeBetweenMoleSpawn)
-        {
-            timer += Time.deltaTime;
+        if (paused) { return; }
 
-            if(timer > timeBetweenMoleSpawn)
+        // next wave
+        if(currentNumOfMoles <= 0)
+        {
+            currentWave++;
+            if(currentWave < maxNumOfMolesInWave.Length)
+            {
+                StartCoroutine(CallNextWave());
+            }
+            else
+            {
+                StartCoroutine(Win());
+            }
+        }
+
+        // spawn moles
+        if(moleSpawnTimer < timeBetweenMoleSpawn)
+        {
+            moleSpawnTimer += Time.deltaTime;
+
+            if(moleSpawnTimer > timeBetweenMoleSpawn)
             {
                 // add mole
                 if (MoleCount() < currentNumOfMoles)
@@ -53,6 +84,46 @@ public class MoleHandler : MonoBehaviour
         }
     }
 
+    IEnumerator CallNextWave()
+    {
+        nextWaveSound.Play();
+
+        SetWave(currentWave);
+        uiTimer.ResetTimer();
+
+        // stop timer
+        paused = true;
+        uiTimer.paused = true;
+
+        // wait
+        yield return new WaitForSeconds(timeBetweenWaves);
+
+        // start next wave
+        paused = false;
+        uiTimer.paused = false;
+    }
+
+    IEnumerator Win()
+    {
+        nextWaveSound.pitch = 2f;
+        nextWaveSound.Play();
+
+        paused = true;
+        uiTimer.paused = true;
+
+        yield return new WaitForSeconds(timeBetweenWaves);
+
+        GameObject.FindObjectOfType<SceneHandler>().GoToScene("WinScene");
+    }
+
+    private void SetWave(int wave)
+    {
+        waveText.text = "WAVE: " + (wave + 1);
+
+        currentNumOfMoles = maxNumOfMolesInWave[wave];
+        SetMoleText();
+    }
+
     private void SetMoleText()
     {
         moleCountText.text = "Moles: " + currentNumOfMoles;
@@ -61,7 +132,7 @@ public class MoleHandler : MonoBehaviour
     private void ResetTimer()
     {
         timeBetweenMoleSpawn = Random.Range(minTimeBetweenMoleSpawn, maxTimeBetweenMoleSpawn);
-        timer = 0f;
+        moleSpawnTimer = 0f;
     }
 
     private int MoleCount()
@@ -100,5 +171,11 @@ public class MoleHandler : MonoBehaviour
         // spawn mole
         GameObject newMole = Instantiate(molePrefab, holes[holeIndex].transform);
         holes[holeIndex].hasMole = true;
+    }
+
+    public void RemoveMole()
+    {
+        currentNumOfMoles--;
+        SetMoleText();
     }
 }
