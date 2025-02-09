@@ -12,7 +12,7 @@ public class Mole : MonoBehaviour
     public float maxSqueakPitch = 1.1f;
     public float minSqueakPitch = 0.5f;
 
-    private bool whacked = false;
+    public bool goingAway = false;
 
     private void Start()
     {
@@ -24,7 +24,9 @@ public class Mole : MonoBehaviour
 
     public void GoAway()
     {
-        if (whacked) { return; }
+        if (goingAway) { return; }
+
+        goingAway = true;
 
         anim.SetTrigger("away");
     }
@@ -36,9 +38,9 @@ public class Mole : MonoBehaviour
 
     public void GetWhacked()
     {
-        if(whacked) { return; }
+        if(goingAway) { return; }
 
-        whacked = true;
+        goingAway = true;
 
         sfxSqueak.pitch = Random.Range(minSqueakPitch, maxSqueakPitch);
         sfxSqueak.Play();

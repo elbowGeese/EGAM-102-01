@@ -57,12 +57,28 @@ public class HoleBehaviour : MonoBehaviour
             if (tr.CompareTag("Mole") == true)
             {
                 Mole m = tr.GetComponent<Mole>();
-                if (whacked) { m.GetWhacked(); }
-                else{ m.GoAway(); }
 
-                hasMole = false;
-                timer = 0f;
+                if (m.goingAway) { break; }
+
+                if (whacked) 
+                { 
+                    m.GetWhacked();
+                    StartCoroutine(ResetHasMole(1f));
+                }
+                else
+                { 
+                    m.GoAway(); 
+                    StartCoroutine(ResetHasMole(0.2f));
+                }
             }
         }
+    }
+
+    IEnumerator ResetHasMole(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+
+        hasMole = false;
+        timer = 0f;
     }
 }
