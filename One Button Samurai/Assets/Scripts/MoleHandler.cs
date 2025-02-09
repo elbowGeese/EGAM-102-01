@@ -39,9 +39,10 @@ public class MoleHandler : MonoBehaviour
     void Start()
     {
         holes = GameObject.FindObjectsOfType<HoleBehaviour>();
+        VariableHolder.waveCount = maxNumOfMolesInWave.Length;
+        VariableHolder.waveProgress = currentWave;
 
         paused = false;
-        currentWave = 0;
         SetWave(currentWave);
 
         ResetTimer();
@@ -55,6 +56,8 @@ public class MoleHandler : MonoBehaviour
         if(currentNumOfMoles <= 0)
         {
             currentWave++;
+            VariableHolder.waveProgress = currentWave;
+
             if(currentWave < maxNumOfMolesInWave.Length)
             {
                 StartCoroutine(CallNextWave());

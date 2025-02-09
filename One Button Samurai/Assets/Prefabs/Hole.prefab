@@ -127,7 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keyText: {fileID: 3563523466643216364}
   hasMole: 0
-  timeToRemoveMole: 3
+  timeToRemoveMole: 2
   timer: 0
 --- !u!1 &7905253505984473590
 GameObject:

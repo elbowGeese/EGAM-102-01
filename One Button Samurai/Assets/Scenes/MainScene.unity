@@ -7543,7 +7543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37226095eeb3204418c85b23c398debd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxNumOfMolesInWave: 050000000a000000
+  maxNumOfMolesInWave: 050000000a0000000f000000190000001e000000
   currentNumOfMoles: 0
   molePrefab: {fileID: 6192135345214738422, guid: f69e7b41484ec124685e20488a42694b, type: 3}
   maxTimeBetweenMoleSpawn: 0.5

@@ -51,25 +51,18 @@ public class HoleBehaviour : MonoBehaviour
 
     private void RemoveMole(bool whacked = false)
     {
-        Debug.Log("REMOVING MOLE...");
-
         foreach (Transform tr in transform)
         {
             Debug.Log(tr.gameObject);
             if (tr.CompareTag("Mole") == true)
             {
-                Debug.Log("MOLE REMOVED");
                 Mole m = tr.GetComponent<Mole>();
                 if (whacked) { m.GetWhacked(); }
                 else{ m.GoAway(); }
 
                 hasMole = false;
                 timer = 0f;
-
-                return;
             }
         }
-
-        Debug.Log("MOLE NOT FOUND");
     }
 }
