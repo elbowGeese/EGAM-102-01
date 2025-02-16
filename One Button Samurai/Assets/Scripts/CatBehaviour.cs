@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class CatBehaviour : MonoBehaviour
 {
-    public enum CatStates { IDLE = 0, ROAMING = 1, JUMPING = 2, ADVANCING = 3, STEALING = 4, RUNAWAY = 5, PICKED = 6, FALLING = 7 }
+    // states
+    public enum CatStates { IDLE = 0, ROAMING = 1, JUMPING = 2, ADVANCING = 3, STEALING = 4, RUNAWAY = 5, PICKED = 6, FALLING = 7, STARSTRUCK = 8 }
     public CatStates state;
 
+    // speed and distance
     public float roamingSpeed = 5f;
     public float jumpingSpeed = 10f;
     public float runawaySpeed = 10f;
@@ -20,13 +22,30 @@ public class CatBehaviour : MonoBehaviour
 
     public float pickedOffset = 1f;
 
+    // components
     private Rigidbody2D rb;
+
+    // timers
+    public float maxTimeToIdle = 2f;
+    public float minTimeToIdle = 0.5f;
+    private float idleTimer;
+
+    public float timeToSteal = 0.5f;
+    private float stealingTimer;
+
+    public float waitTimeToRunAfterSteal = 0.8f;
+
+    // food
+    private Transform foodPosition;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        foodPosition = GameObject.FindWithTag("Food").transform;
 
         SetState(CatStates.ROAMING);
+
+        AddListeners();
     }
 
     void Update()
@@ -57,6 +76,9 @@ public class CatBehaviour : MonoBehaviour
             case CatStates.FALLING:
                 FallingUpdate();
                 break;
+            case CatStates.STARSTRUCK:
+                IdleUpdate();
+                break;
             default:
                 Debug.Log("NO STATE FOUND");
                 break;
@@ -73,13 +95,12 @@ public class CatBehaviour : MonoBehaviour
         {
             case CatStates.IDLE:
                 moveSpeed = 0f;
+                idleTimer = Random.Range(minTimeToIdle, maxTimeToIdle);
                 break;
             case CatStates.ROAMING:
                 moveSpeed = roamingSpeed;
-
                 // pick random target x
                 targetX = Random.Range(VariableStorage.screenMinX, VariableStorage.screenMaxX);
-
                 break;
             case CatStates.JUMPING:
                 moveSpeed = jumpingSpeed;
@@ -89,9 +110,11 @@ public class CatBehaviour : MonoBehaviour
                 break;
             case CatStates.STEALING:
                 moveSpeed = 0f;
+                stealingTimer = timeToSteal;
                 break;
             case CatStates.RUNAWAY:
                 moveSpeed = runawaySpeed;
+                MoveToRandomDirection();
                 break;
             case CatStates.PICKED:
                 moveSpeed = pickedSpeed;
@@ -100,6 +123,10 @@ public class CatBehaviour : MonoBehaviour
                 moveSpeed = 0f;
                 rb.gravityScale = 1f;
                 LaunchTowardsMousePos();
+                break;
+            case CatStates.STARSTRUCK:
+                moveSpeed = 0f;
+                idleTimer = 300f;
                 break;
             default:
                 Debug.Log("Cannot set state because it does not exist");
@@ -110,6 +137,18 @@ public class CatBehaviour : MonoBehaviour
     private void IdleUpdate()
     {
         // no moving
+        if(idleTimer > 0f)
+        {
+            idleTimer -= Time.deltaTime;
+
+            if(idleTimer <= 0f)
+            {
+                int[] weight = new int[4] { 1, 3, 3, 4 };
+                if (transform.position.y == VariableStorage.counterY) { weight[2] = 0; }
+
+                SetWeightedRandomState(weight);
+            }
+        }
     }
 
     private void RoamingUpdate()
@@ -120,7 +159,7 @@ public class CatBehaviour : MonoBehaviour
         // if close enough to the target then change state
         if (transform.position.x <= targetX + distanceFromTargetRadius && transform.position.x >= targetX - distanceFromTargetRadius)
         {
-            int[] weight = new int[6] { 5, 3, 1, 2, 0, 0 };
+            int[] weight = new int[4] { 5, 3, 3, 2 };
             if (transform.position.y == VariableStorage.counterY) { weight[2] = 0; }
 
             SetWeightedRandomState(weight);
@@ -130,21 +169,56 @@ public class CatBehaviour : MonoBehaviour
     private void JumpingUpdate()
     {
         // move y to counter y
+        MoveToTarget(new Vector3(transform.position.x, VariableStorage.counterY, transform.position.z));
+
+        if (transform.position.y >= VariableStorage.counterY)
+        {
+            transform.position = new Vector3(transform.position.x, VariableStorage.counterY, transform.position.z);
+
+            int[] weight = new int[4] { 5, 3, 0, 3 };
+            if (transform.position.y == VariableStorage.counterY) { weight[2] = 0; }
+
+            SetWeightedRandomState(weight);
+        }
     }
 
     private void AdvancingUpdate()
     {
         // move towards food
+        MoveToTarget(new Vector3(foodPosition.position.x, transform.position.y, transform.position.z));
+
+        // if not on the counter, choose aonther state
+        if (transform.position.y != VariableStorage.counterY)
+        {
+            if (transform.position.x <= foodPosition.position.x + distanceFromTargetRadius && transform.position.x >= foodPosition.position.x - distanceFromTargetRadius)
+            {
+                int[] weight = new int[4] { 3, 3, 10, 0 };
+                SetWeightedRandomState(weight);
+            }
+        }
     }
 
     private void StealingUpdate()
     {
         // if close enough to food, steal it
+        if (stealingTimer > 0f)
+        {
+            stealingTimer -= Time.deltaTime;
+
+            if (stealingTimer <= 0f)
+            {
+                if (!foodPosition.gameObject.GetComponent<FoodBehaviour>().stolen)
+                {
+                    foodPosition.gameObject.GetComponent<FoodBehaviour>().StealFood(transform);
+                    SetState(CatStates.RUNAWAY);
+                }
+            }
+        }
     }
 
     private void RunawayUpdate()
     {
-        // once cat has food, run away!
+        
     }
 
     private void PickedUpdate()
@@ -168,8 +242,13 @@ public class CatBehaviour : MonoBehaviour
 
     private void FallingUpdate()
     {
-        // back to floor
-        
+        if(transform.position.y <= VariableStorage.groundY)
+        {
+            rb.gravityScale = 0f;
+            rb.velocity = Vector2.zero;
+            transform.position = new Vector3(transform.position.x, VariableStorage.groundY, transform.position.z);
+            SetState(CatStates.IDLE);
+        }
     }
 
     #endregion
@@ -182,6 +261,14 @@ public class CatBehaviour : MonoBehaviour
         Vector3 toTargetDirection = toTargetDelta.normalized;
 
         transform.position += toTargetDirection * moveSpeed * Time.deltaTime;
+    }
+
+    private void MoveToRandomDirection()
+    {
+        Vector2 dir = (Vector2)foodPosition.position - Vector2.zero;
+        dir.Normalize();
+
+        rb.AddForce(new Vector2(dir.x, 0f) * moveSpeed, ForceMode2D.Impulse);
     }
 
     private void LaunchTowardsMousePos()
@@ -204,11 +291,16 @@ public class CatBehaviour : MonoBehaviour
         // creates a weighted list
         List<int> weightedStates = new List<int>();
 
-        foreach (int weightIndex in weight) 
+        // for each state
+        for(int i = 0; i < weight.Length; i++)
         {
-            for(int i = 0; i < weight[weightIndex]; i++)
+            Debug.Log(i);
+            // for each weight of the state
+            for (int j = 0; j <= weight[i]; j++)
             {
-                weightedStates.Add(weightIndex);
+                // add the state
+                weightedStates.Add(i);
+                
             }
         }
 
@@ -221,4 +313,62 @@ public class CatBehaviour : MonoBehaviour
 
     #endregion
 
+    #region Collisions
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(state == CatStates.ADVANCING)
+        {
+            FoodBehaviour food = collision.gameObject.GetComponent<FoodBehaviour>();
+            if (food)
+            {
+                Debug.Log("COLLISION WITH FOOD");
+                if (!food.stolen)
+                {
+                    Debug.Log("STOLEN!");
+                    SetState(CatStates.STEALING);
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Listeners
+
+    public void AddListeners()
+    {
+        SceneHandler.onSceneChange += RemoveListeners;
+        FoodBehaviour.onCatSteal += OnCatSteal;
+        GameTimer.onFinishedCooking += OnFinishedCooking;
+    }
+
+    public void RemoveListeners()
+    {
+        SceneHandler.onSceneChange -= RemoveListeners;
+        FoodBehaviour.onCatSteal -= OnCatSteal;
+        GameTimer.onFinishedCooking -= OnFinishedCooking;
+    }
+
+    public void OnCatSteal()
+    {
+        // ignore cat that stole
+        if (state == CatStates.RUNAWAY) { return; }
+
+        StartCoroutine(WaitToRun());
+    }
+
+    IEnumerator WaitToRun()
+    {
+        yield return new WaitForSeconds(waitTimeToRunAfterSteal);
+
+        SetState(CatStates.RUNAWAY);
+    }
+
+    public void OnFinishedCooking()
+    {
+        SetState(CatStates.STARSTRUCK);
+    }
+
+    #endregion
 }

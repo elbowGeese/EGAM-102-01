@@ -1,5 +1,7 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MouseHandler : MonoBehaviour
@@ -8,13 +10,17 @@ public class MouseHandler : MonoBehaviour
 
     public CatBehaviour pickedCat;
 
-    void Start()
+    private bool foodStolen = false;
+
+    private void Start()
     {
-        
+        AddListeners();
     }
 
     void Update()
     {
+        if (foodStolen) { return; }
+
         if (pickedCat != null)
         {
             // look for mouse button to release picked cat
@@ -52,5 +58,22 @@ public class MouseHandler : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void AddListeners()
+    {
+        SceneHandler.onSceneChange += SubtractListeners;
+        FoodBehaviour.onCatSteal += OnCatSteal;
+    }
+
+    public void SubtractListeners()
+    {
+        SceneHandler.onSceneChange -= SubtractListeners;
+        FoodBehaviour.onCatSteal -= OnCatSteal;
+    }
+
+    public void OnCatSteal()
+    {
+        foodStolen = true;
     }
 }
