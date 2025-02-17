@@ -9,6 +9,9 @@ public class CatBehaviour : MonoBehaviour
     public enum CatStates { IDLE = 0, ROAMING = 1, JUMPING = 2, ADVANCING = 3, STEALING = 4, RUNAWAY = 5, PICKED = 6, FALLING = 7, STARSTRUCK = 8 }
     public CatStates state;
 
+    // cat color
+    private int color;
+
     // speed and distance
     public float roamingSpeed = 5f;
     public float jumpingSpeed = 10f;
@@ -24,6 +27,9 @@ public class CatBehaviour : MonoBehaviour
 
     // components
     private Rigidbody2D rb;
+    private Animator anim;
+    private SpriteRenderer sprite;
+    private AudioSource audioSource;
 
     // timers
     public float maxTimeToIdle = 2f;
@@ -38,10 +44,24 @@ public class CatBehaviour : MonoBehaviour
     // food
     private Transform foodPosition;
 
+    // sounds
+    public AudioClip mrrClip;
+    public AudioClip meowClip;
+    public float maxPitch = 1.1f;
+    public float minPitch = 0.9f;
+
     void Start()
     {
+        color = Random.Range(0, 5);
+
+        anim = transform.GetChild(0).gameObject.GetComponent<Animator>();
+        anim.SetFloat("color", color / 4f);
+        sprite = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+
         rb = GetComponent<Rigidbody2D>();
         foodPosition = GameObject.FindWithTag("Food").transform;
+
+        audioSource = GetComponent<AudioSource>();
 
         SetState(CatStates.ROAMING);
 
@@ -91,42 +111,67 @@ public class CatBehaviour : MonoBehaviour
     {
         state = newState;
 
+        anim.ResetTrigger("idle");
+        anim.ResetTrigger("walk");
+        anim.ResetTrigger("jump");
+        anim.ResetTrigger("advance");
+        anim.ResetTrigger("run");
+        anim.ResetTrigger("picked");
+        anim.ResetTrigger("flung");
+
         switch (state)
         {
             case CatStates.IDLE:
                 moveSpeed = 0f;
                 idleTimer = Random.Range(minTimeToIdle, maxTimeToIdle);
+                anim.SetTrigger("idle");
                 break;
             case CatStates.ROAMING:
                 moveSpeed = roamingSpeed;
                 // pick random target x
                 targetX = Random.Range(VariableStorage.screenMinX, VariableStorage.screenMaxX);
+                anim.SetTrigger("walk");
                 break;
             case CatStates.JUMPING:
                 moveSpeed = jumpingSpeed;
+                anim.SetTrigger("jump");
                 break;
             case CatStates.ADVANCING:
                 moveSpeed = roamingSpeed;
+                anim.SetTrigger("advance");
                 break;
             case CatStates.STEALING:
                 moveSpeed = 0f;
                 stealingTimer = timeToSteal;
+                anim.SetTrigger("idle");
                 break;
             case CatStates.RUNAWAY:
                 moveSpeed = runawaySpeed;
                 MoveToRandomDirection();
+                anim.SetTrigger("run");
                 break;
             case CatStates.PICKED:
+                audioSource.clip = mrrClip;
+                audioSource.pitch = Random.Range(minPitch, maxPitch);
+                audioSource.Play();
+
                 moveSpeed = pickedSpeed;
+                anim.SetTrigger("picked");
                 break;
             case CatStates.FALLING:
+                audioSource.clip = meowClip;
+                audioSource.pitch = Random.Range(minPitch, maxPitch);
+                audioSource.Play();
+
                 moveSpeed = 0f;
                 rb.gravityScale = 1f;
                 LaunchTowardsMousePos();
+                anim.SetTrigger("flung");
                 break;
             case CatStates.STARSTRUCK:
                 moveSpeed = 0f;
                 idleTimer = 300f;
+                anim.SetTrigger("idle");
                 break;
             default:
                 Debug.Log("Cannot set state because it does not exist");
@@ -196,6 +241,12 @@ public class CatBehaviour : MonoBehaviour
                 SetWeightedRandomState(weight);
             }
         }
+
+        // if close enough to the target then change state
+        if (transform.position.x <= targetX + distanceFromTargetRadius && transform.position.x >= targetX - distanceFromTargetRadius)
+        {
+            SetState(CatStates.IDLE);
+        }
     }
 
     private void StealingUpdate()
@@ -261,6 +312,10 @@ public class CatBehaviour : MonoBehaviour
         Vector3 toTargetDirection = toTargetDelta.normalized;
 
         transform.position += toTargetDirection * moveSpeed * Time.deltaTime;
+
+        // sprite flip
+        if (toTargetDirection.x > 0f) { sprite.flipX = true; }
+        else { sprite.flipX = false; }
     }
 
     private void MoveToRandomDirection()
@@ -269,6 +324,10 @@ public class CatBehaviour : MonoBehaviour
         dir.Normalize();
 
         rb.AddForce(new Vector2(dir.x, 0f) * moveSpeed, ForceMode2D.Impulse);
+
+        // sprite flip
+        if (dir.x > 0f) { sprite.flipX = true; }
+        else {  sprite.flipX = false; }
     }
 
     private void LaunchTowardsMousePos()
@@ -284,6 +343,10 @@ public class CatBehaviour : MonoBehaviour
         float speed = launchSpeed.Evaluate(Vector2.Distance(targetPos, transform.position));
         
         rb.AddForce(targetDirection * speed, ForceMode2D.Impulse);
+
+        // sprite flip
+        if (targetDirection.x > 0f) { sprite.flipX = true; }
+        else { sprite.flipX = false; }
     }
 
     private void SetWeightedRandomState(int[] weight)
@@ -322,10 +385,8 @@ public class CatBehaviour : MonoBehaviour
             FoodBehaviour food = collision.gameObject.GetComponent<FoodBehaviour>();
             if (food)
             {
-                Debug.Log("COLLISION WITH FOOD");
                 if (!food.stolen)
                 {
-                    Debug.Log("STOLEN!");
                     SetState(CatStates.STEALING);
                 }
             }

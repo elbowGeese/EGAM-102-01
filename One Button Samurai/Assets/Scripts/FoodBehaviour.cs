@@ -29,9 +29,10 @@ public class FoodBehaviour : MonoBehaviour
 
     public void StealFood(Transform cat)
     {
+        onCatSteal?.Invoke();
+        Debug.Log("Stole food");
+
         stolen = true;
         transform.parent = cat;
-
-        onCatSteal?.Invoke();
     }
 }
