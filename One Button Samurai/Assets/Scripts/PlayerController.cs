@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        SetPosition(PlayerPosition.TOPLEFT);
+        SetPosition(PlayerPosition.TOPRIGHT);
     }
 
     private void Update()

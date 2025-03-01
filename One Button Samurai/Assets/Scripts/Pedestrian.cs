@@ -6,9 +6,7 @@ public class Pedestrian : MonoBehaviour
 {
     public PlayerController player;
     public Animator anim;
-
-    public bool hasWalkedBottom = false;
-    public bool hasWalkedTop = false;
+    public AudioSource caughtSFX;
 
     public enum PedestrianStates
     {
@@ -40,6 +38,7 @@ public class Pedestrian : MonoBehaviour
                 if (player.playerPos == PlayerController.PlayerPosition.TOPRIGHT)
                 {
                     ScoreHandler.currentScore++;
+                    caughtSFX.Play();
                     SetState(PedestrianStates.WALKING);
                 }
                 break;
@@ -47,6 +46,7 @@ public class Pedestrian : MonoBehaviour
                 if (player.playerPos == PlayerController.PlayerPosition.TOPLEFT)
                 {
                     ScoreHandler.currentScore++;
+                    caughtSFX.Play();
                     SetState(PedestrianStates.WALKING);
                 }
                 break;
@@ -54,6 +54,7 @@ public class Pedestrian : MonoBehaviour
                 if (player.playerPos == PlayerController.PlayerPosition.BOTTOMRIGHT)
                 {
                     ScoreHandler.currentScore++;
+                    caughtSFX.Play();
                     SetState(PedestrianStates.WALKING);
                 }
                 break;
@@ -61,6 +62,7 @@ public class Pedestrian : MonoBehaviour
                 if (player.playerPos == PlayerController.PlayerPosition.BOTTOMLEFT)
                 {
                     ScoreHandler.currentScore++;
+                    caughtSFX.Play();
                     SetState(PedestrianStates.WALKING);
                 }
                 break;
@@ -84,35 +86,6 @@ public class Pedestrian : MonoBehaviour
     #endregion
 
     #region ANIMATOR METHODS
-    public void EndWalkingBottom()
-    {
-        hasWalkedBottom = true;
-
-        if (hasWalkedTop)
-        {
-            // end pedestrian
-            Destroy(gameObject);
-        }
-        else
-        {
-            anim.SetBool("walkingTop", true);
-        }
-    }
-
-    public void EndWalkingTop()
-    {
-        hasWalkedTop = true;
-
-        if (hasWalkedBottom)
-        {
-            // end pedestrian
-            Destroy(gameObject);
-        }
-        else
-        {
-            anim.SetBool("walkingTop", false);
-        }
-    }
 
     public void SetState(PedestrianStates newState)
     {

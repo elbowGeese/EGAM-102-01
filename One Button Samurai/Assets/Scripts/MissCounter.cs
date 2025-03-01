@@ -12,6 +12,8 @@ public class MissCounter : MonoBehaviour
     public GameObject missImage2;
     public GameObject missImage3;
 
+    public AudioSource missSFX;
+
     public static event Action onGameEnd;
 
     void Start()
@@ -26,17 +28,19 @@ public class MissCounter : MonoBehaviour
             if (!missText.activeSelf)
             {
                 missText.SetActive(true);
+                missSFX.Play();
             }
 
             if (!missImage1.activeSelf)
             {
                 missImage1.SetActive(true);
-                EndGame();
+                missSFX.Play();
             }
 
             if (currentMisses > 1 && !missImage2.activeSelf)
             {
                 missImage2.SetActive(true);
+                missSFX.Play();
             }
 
             if (currentMisses > 2 && !missImage3.activeSelf)
