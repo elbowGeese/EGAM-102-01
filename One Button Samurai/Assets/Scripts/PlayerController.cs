@@ -67,6 +67,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SetTopLeft()
+    {
+        SetPosition(PlayerPosition.TOPLEFT);
+    }
+
+    public void SetTopRight()
+    {
+        SetPosition(PlayerPosition.TOPRIGHT);
+    }
+
+    public void SetBottomLeft()
+    {
+        SetPosition(PlayerPosition.BOTTOMLEFT);
+    }
+
+    public void SetBottomRight()
+    {
+        SetPosition(PlayerPosition.BOTTOMRIGHT);
+    }
+
     public void CloseAllPositions()
     {
         topLeft.SetActive(false);
