@@ -8,6 +8,13 @@ public class BouncePadController : MonoBehaviour
     public float moveSpeed = 5f;
     public float offset = 0.01f;
 
+    private Score score;
+
+    private void Start()
+    {
+        score = FindObjectOfType<Score>();
+    }
+
     void Update()
     {
         Vector2 mousePos = Input.mousePosition;
@@ -23,5 +30,13 @@ public class BouncePadController : MonoBehaviour
         Vector3 toTargetDir = toTargetDelta.normalized;
 
         transform.position += toTargetDir * moveSpeed * Time.deltaTime;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ball"))
+        {
+            score._score += 1;
+        }
     }
 }
