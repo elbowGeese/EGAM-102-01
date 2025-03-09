@@ -7,6 +7,7 @@ public class BouncePadController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float offset = 0.01f;
+    public float leftRightForce = 1f;
 
     private Score score;
 
@@ -37,6 +38,27 @@ public class BouncePadController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ball"))
         {
             score._score += 1;
+
+            if (BallIsLeft(collision.transform))
+            {
+                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(-transform.right * leftRightForce, ForceMode2D.Impulse);
+            }
+            else
+            {
+                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * leftRightForce, ForceMode2D.Impulse);
+            }
+        }
+    }
+
+    public bool BallIsLeft(Transform ballTransform)
+    {
+        if (ballTransform.position.x > transform.position.x)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 }
