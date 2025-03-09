@@ -26,19 +26,19 @@ public class EndLevelUI : MonoBehaviour
         switch (level)
         {
             case Level.Level1:
-                if(endScore < PlayerPrefs.GetInt("Level1Score"))
+                if(endScore < PlayerPrefs.GetInt("Level1Score") || PlayerPrefs.GetInt("Level1Score") == 0)
                 {
                     PlayerPrefs.SetInt("Level1Score", endScore);
                 }
                 break;
             case Level.Level2:
-                if (endScore < PlayerPrefs.GetInt("Level2Score"))
+                if (endScore < PlayerPrefs.GetInt("Level2Score") || PlayerPrefs.GetInt("Level2Score") == 0)
                 {
                     PlayerPrefs.SetInt("Level2Score", endScore);
                 }
                 break;
             case Level.Level3:
-                if (endScore < PlayerPrefs.GetInt("Level3Score"))
+                if (endScore < PlayerPrefs.GetInt("Level3Score") || PlayerPrefs.GetInt("Level3Score") == 0)
                 {
                     PlayerPrefs.SetInt("Level3Score", endScore);
                 }
