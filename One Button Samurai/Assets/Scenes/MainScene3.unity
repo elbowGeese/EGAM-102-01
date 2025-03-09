@@ -1514,7 +1514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 30
-  offset: 0.01
+  offset: 0.1
   leftRightForce: 1
 --- !u!61 &528480951
 BoxCollider2D:
