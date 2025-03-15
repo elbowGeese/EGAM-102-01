@@ -15,4 +15,16 @@ public class SceneHandler : MonoBehaviour
 
         SceneManager.LoadScene(sceneName);
     }
+
+    public void GoToNextLevel()
+    {
+        onSceneChange?.Invoke();
+
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        if (SceneManager.GetSceneByBuildIndex(currentSceneIndex + 1) != null)
+        {
+            SceneManager.LoadScene(currentSceneIndex + 1);
+        }
+    }
 }
