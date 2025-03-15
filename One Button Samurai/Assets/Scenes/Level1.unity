@@ -2637,9 +2637,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9864026145a0c74e9789d5abf7ad761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeBetweenRbFall: 0.2
   completeTime: 3
   fill: {fileID: 714422236}
-  fillColor: {r: 0.8000001, g: 0.8078432, b: 0.81568635, a: 0}
+  state: 0
   onScale: 1
   offScale: 0.5
 --- !u!1 &2006763332
@@ -2799,7 +2800,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: MainScene
+          m_StringArgument: Level1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2012677945
@@ -2984,11 +2985,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.997
+      value: -0.97
       objectReference: {fileID: 0}
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.208
+      value: -1.49
       objectReference: {fileID: 0}
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2996,19 +2997,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9958311
       objectReference: {fileID: 0}
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.0912169
       objectReference: {fileID: 0}
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3020,7 +3021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2286286929630916700, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -10.467
       objectReference: {fileID: 0}
     - target: {fileID: 4352193807368875413, guid: 4033ff095e92b3a4398fa5fc51fc5295, type: 3}
       propertyPath: m_Name
