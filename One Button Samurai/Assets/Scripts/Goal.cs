@@ -9,6 +9,7 @@ public class Goal : MonoBehaviour
     public float completeTime = 3f;
     public Coroutine timer;
 
+    private SpriteRenderer sp;
     public SpriteRenderer fill;
     private Color fillColor;
 
@@ -20,6 +21,8 @@ public class Goal : MonoBehaviour
 
     void Start()
     {
+        sp = GetComponent<SpriteRenderer>();
+
         fillColor = fill.color;
         SetState(GoalState.OFF);
     }
@@ -86,6 +89,11 @@ public class Goal : MonoBehaviour
 
     IEnumerator CompleteLevel()
     {
+        Color transparent = Color.white;
+        transparent.a = 0f;
+        sp.color = transparent;
+        fill.color = transparent;
+
         Rigidbody2D[] rbs = FindObjectsOfType<Rigidbody2D>();
 
         foreach(Rigidbody2D r in rbs)
