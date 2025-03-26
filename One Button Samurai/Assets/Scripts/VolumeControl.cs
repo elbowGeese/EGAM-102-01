@@ -22,22 +22,23 @@ public class VolumeControl : MonoBehaviour
         sfxSlider.maxValue = volumeMax;
         sfxSlider.minValue = volumeMin;
 
-        Debug.Log(VolumeVariables.currentMusic + "Start");
-
         // set current volume
         musicSlider.value = VolumeVariables.currentMusic;
         sfxSlider.value = VolumeVariables.currentSFX;
 
-        SetMusicVolume(VolumeVariables.currentMusic);
-        SetSFXVolume(VolumeVariables.currentSFX);
+        AddListeners();
+    }
+
+    public void AddListeners()
+    {
+        musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
     }
 
     public void SetMusicVolume(float volume)
     {
         volumeMixer.SetFloat("musicVolume", volume);
         VolumeVariables.currentMusic = volume;
-
-        Debug.Log(VolumeVariables.currentMusic + "Set volume");
     }
 
     public void SetSFXVolume(float volume)
