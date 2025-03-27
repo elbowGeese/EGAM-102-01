@@ -14,6 +14,9 @@ public class HoleBehaviour : MonoBehaviour
     public float timeToRemoveMole = 2f;
     public float timer = 0f;
 
+    public GameObject hitPartPrefab;
+    public GameObject missPartPrefab;
+
     void Start()
     {
         image = transform.GetChild(0).GetComponent<Image>();
@@ -45,7 +48,15 @@ public class HoleBehaviour : MonoBehaviour
     {
         if (hasMole)
         {
+            GameObject hitPart = Instantiate(hitPartPrefab, transform);
+            hitPart.transform.position = transform.position;
+
             RemoveMole(true);
+        }
+        else
+        {
+            GameObject missPart = Instantiate(missPartPrefab, transform);
+            missPart.transform.position = transform.position;
         }
     }
 

@@ -11,7 +11,7 @@ public class VolumeControl : MonoBehaviour
     public Slider sfxSlider;
 
     private float volumeMax = 0f;
-    private float volumeMin = -80f;
+    private float volumeMin = -60f;
 
     void Start()
     {
