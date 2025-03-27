@@ -1721,7 +1721,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 1730158055}
+  fill: {fileID: 1111107050}
+  hourglassAnim: {fileID: 2139824638}
   maxTime: 30
+  timeToColorChange: 6
+  timeToStopColorChange: 4
+  red: {r: 0.8980393, g: 0.23529413, b: 0.26666668, a: 1}
   timeLeft: 0
   paused: 0
 --- !u!1 &470766278

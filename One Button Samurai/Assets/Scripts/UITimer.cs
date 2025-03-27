@@ -6,8 +6,13 @@ using UnityEngine.UI;
 public class UITimer : MonoBehaviour
 {
     public Slider slider;
+    public Image fill;
+    public Animator hourglassAnim;
 
     public float maxTime = 30f;
+    public float timeToColorChange = 10f;
+    public float timeToStopColorChange = 8f;
+    public Color red;
     public float timeLeft;
 
     public bool paused = false;
@@ -29,6 +34,11 @@ public class UITimer : MonoBehaviour
             timeLeft -= Time.deltaTime;
             slider.value = timeLeft;
 
+            if (timeLeft <= timeToColorChange)
+            {
+                fill.color = Color.Lerp(Color.white, red, 1 - ((timeLeft - timeToStopColorChange) / (timeToColorChange - timeToStopColorChange)));
+            }
+
             if (timeLeft <= 0)
             {
                 LoseGame();
@@ -40,6 +50,7 @@ public class UITimer : MonoBehaviour
     {
         timeLeft = maxTime;
         slider.value = timeLeft;
+        fill.color = Color.white;
     }
 
     private void LoseGame()

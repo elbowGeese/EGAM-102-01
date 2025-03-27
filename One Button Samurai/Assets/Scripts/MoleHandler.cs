@@ -95,15 +95,20 @@ public class MoleHandler : MonoBehaviour
         uiTimer.ResetTimer();
 
         // stop timer
-        paused = true;
-        uiTimer.paused = true;
+        SetUI(true);
 
         // wait
         yield return new WaitForSeconds(timeBetweenWaves);
 
         // start next wave
-        paused = false;
-        uiTimer.paused = false;
+        SetUI(false);
+    }
+
+    private void SetUI(bool isPaused)
+    {
+        paused = isPaused;
+        uiTimer.paused = isPaused;
+        uiTimer.hourglassAnim.SetBool("flipping", !isPaused);
     }
 
     IEnumerator Win()
