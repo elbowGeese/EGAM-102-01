@@ -14,6 +14,9 @@ public class Mole : MonoBehaviour
 
     public bool goingAway = false;
 
+    public ParticleSystem neverHitParticlePrefab;
+    public AudioSource sfxEndlessMiss;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -33,6 +36,11 @@ public class Mole : MonoBehaviour
         if (GameObject.FindFirstObjectByType<EndlessMoleHandler>())
         {
             GameObject.FindFirstObjectByType<EndlessMoleHandler>().MissMole();
+
+            ParticleSystem neverHitPart = Instantiate(neverHitParticlePrefab);
+            neverHitPart.transform.position = transform.position;
+
+            sfxEndlessMiss.Play();
         }
     }
 

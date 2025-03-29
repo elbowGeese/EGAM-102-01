@@ -9,12 +9,15 @@ public class VolumeControl : MonoBehaviour
     public AudioMixer volumeMixer;
     public Slider musicSlider;
     public Slider sfxSlider;
+    private AudioSource sfxAudio;
 
     private float volumeMax = 0f;
     private float volumeMin = -60f;
 
     void Start()
     {
+        sfxAudio = sfxSlider.gameObject.GetComponent<AudioSource>();
+
         // set min max
         musicSlider.maxValue = volumeMax;
         musicSlider.minValue = volumeMin;
@@ -45,5 +48,6 @@ public class VolumeControl : MonoBehaviour
     {
         volumeMixer.SetFloat("sfxVolume", volume);
         VolumeVariables.currentSFX = volume;
+        sfxAudio.Play();
     }
 }

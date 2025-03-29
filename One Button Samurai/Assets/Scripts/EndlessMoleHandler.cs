@@ -36,6 +36,7 @@ public class EndlessMoleHandler : MonoBehaviour
         nextMoleSpawn = timeBetweenMoleSpawn.Evaluate(overallTime);
         paused = false;
         UpdateMissMoleCounter();
+        SetMoleText();
     }
 
     void Update()
@@ -70,7 +71,9 @@ public class EndlessMoleHandler : MonoBehaviour
 
         yield return new WaitForSeconds(endWaitTime);
 
-        GameObject.FindObjectOfType<SceneHandler>().GoToScene("WinScene");
+        EndlessModeHitCountVariable.hitCount = molesWhacked;
+
+        GameObject.FindObjectOfType<SceneHandler>().GoToScene("EndlessEndScene");
     }
 
 

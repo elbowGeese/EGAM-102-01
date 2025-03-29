@@ -11,10 +11,12 @@ public class MissCounter : MonoBehaviour
     public Color deactiveColor;
 
     public ParticleSystem missParticle;
+    private AudioSource missAudio;
 
     private void Awake()
     {
         missImage = GetComponent<Image>();
+        missAudio = transform.GetComponentInChildren<AudioSource>();
     }
 
     public void Activate()
@@ -22,6 +24,7 @@ public class MissCounter : MonoBehaviour
         isActive = true;
         missImage.color = activeColor;
         missParticle.Play();
+        missAudio.Play();
     }
 
     public void Deactivate()

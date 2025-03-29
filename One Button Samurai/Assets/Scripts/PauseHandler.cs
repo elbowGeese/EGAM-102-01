@@ -12,6 +12,21 @@ public class PauseHandler : MonoBehaviour
         ClosePauseMenu();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!pauseMenu.activeSelf)
+            {
+                OpenPauseMenu();
+            }
+            else
+            {
+                ClosePauseMenu();
+            }
+        }
+    }
+
     // opens the pause menu and hides the pause button
     // pauses game
     public void OpenPauseMenu()
