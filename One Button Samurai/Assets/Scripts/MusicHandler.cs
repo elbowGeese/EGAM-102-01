@@ -17,7 +17,7 @@ public class MusicHandler : MonoBehaviour
 
     void Update()
     {
-        if(SceneManager.GetActiveScene().name == "MainScene")
+        if(SceneManager.GetActiveScene().name == "MainScene" || SceneManager.GetActiveScene().name == "EndlessMode")
         {
             musicSource.pitch = mainSpeed;
         }
