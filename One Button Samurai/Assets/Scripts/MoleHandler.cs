@@ -92,7 +92,7 @@ public class MoleHandler : MonoBehaviour
         nextWaveSound.Play();
 
         SetWave(currentWave);
-        uiTimer.ResetTimer();
+        if (uiTimer != null) { uiTimer.ResetTimer(); }
 
         // stop timer
         SetUI(true);
@@ -107,8 +107,12 @@ public class MoleHandler : MonoBehaviour
     private void SetUI(bool isPaused)
     {
         paused = isPaused;
-        uiTimer.paused = isPaused;
-        uiTimer.hourglassAnim.SetBool("flipping", !isPaused);
+
+        if(uiTimer != null)
+        {
+            uiTimer.paused = isPaused;
+            uiTimer.hourglassAnim.SetBool("flipping", !isPaused);
+        }
     }
 
     IEnumerator Win()
@@ -117,7 +121,7 @@ public class MoleHandler : MonoBehaviour
         nextWaveSound.Play();
 
         paused = true;
-        uiTimer.paused = true;
+        if (uiTimer != null) { uiTimer.paused = true; }
 
         yield return new WaitForSeconds(timeBetweenWaves);
 

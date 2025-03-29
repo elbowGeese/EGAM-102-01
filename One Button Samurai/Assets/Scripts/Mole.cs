@@ -27,8 +27,13 @@ public class Mole : MonoBehaviour
         if (goingAway) { return; }
 
         goingAway = true;
-
         anim.SetTrigger("away");
+
+        // if endless mode
+        if (GameObject.FindFirstObjectByType<EndlessMoleHandler>())
+        {
+            GameObject.FindFirstObjectByType<EndlessMoleHandler>().MissMole();
+        }
     }
 
     public void DestroyFromAnim()
@@ -45,7 +50,14 @@ public class Mole : MonoBehaviour
         sfxSqueak.pitch = Random.Range(minSqueakPitch, maxSqueakPitch);
         sfxSqueak.Play();
 
-        GameObject.FindObjectOfType<MoleHandler>().RemoveMole();
+        if (GameObject.FindObjectOfType<MoleHandler>())
+        {
+            GameObject.FindObjectOfType<MoleHandler>().RemoveMole();
+        }
+        else if (GameObject.FindObjectOfType<EndlessMoleHandler>())
+        {
+            GameObject.FindObjectOfType<EndlessMoleHandler>().RemoveMole();
+        }
         anim.SetTrigger("whacked");
     }
 
