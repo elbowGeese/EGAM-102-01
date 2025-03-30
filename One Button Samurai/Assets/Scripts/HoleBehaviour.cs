@@ -17,6 +17,8 @@ public class HoleBehaviour : MonoBehaviour
     public GameObject hitPartPrefab;
     public GameObject missPartPrefab;
 
+    public bool onPlayer = false;
+
     void Start()
     {
         image = transform.GetChild(0).GetComponent<Image>();
@@ -64,7 +66,6 @@ public class HoleBehaviour : MonoBehaviour
     {
         foreach (Transform tr in transform)
         {
-            Debug.Log(tr.gameObject);
             if (tr.CompareTag("Mole") == true)
             {
                 Mole m = tr.GetComponent<Mole>();
@@ -91,5 +92,21 @@ public class HoleBehaviour : MonoBehaviour
 
         hasMole = false;
         timer = 0f;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<HammerHandler>())
+        {
+            onPlayer = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<HammerHandler>())
+        {
+            onPlayer = false;
+        }
     }
 }

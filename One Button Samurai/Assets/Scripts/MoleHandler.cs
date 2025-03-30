@@ -167,18 +167,29 @@ public class MoleHandler : MonoBehaviour
         int holeIndex = Random.Range(0, holes.Length);
 
         // choose a hole that doesnt have a mole
-        while (holes[holeIndex].hasMole)
+        int tries = 20;
+        while (tries > 0)
         {
             holeIndex = Random.Range(0, holes.Length);
+            if (!holes[holeIndex].hasMole)
+            {
+                if (!holes[holeIndex].onPlayer)
+                {
+                    return holeIndex;
+                }
+            }
+
+            tries--;
         }
 
-        return holeIndex;
+        return -1;
     }
 
     private void AddMole()
     {
         // choose hole
         int holeIndex = GetOpenHoleIndex();
+        if (holeIndex < 0) { return; }
 
         // spawn mole
         GameObject newMole = Instantiate(molePrefab, holes[holeIndex].transform);

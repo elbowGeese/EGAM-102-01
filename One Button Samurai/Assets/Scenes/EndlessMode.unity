@@ -11279,16 +11279,16 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 1.1976671
-      value: 2.9953468
-      inSlope: -0.05
-      outSlope: -0.05
+      value: 1.9980263
+      inSlope: -0.027285576
+      outSlope: -0.027285576
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 11.197667
-      value: 2.4953468
+      value: 1.7251705
       inSlope: -0.00059844146
       outSlope: -0.00059844146
       tangentMode: 0
@@ -11297,7 +11297,7 @@ MonoBehaviour:
       outWeight: 1
     - serializedVersion: 3
       time: 21.197666
-      value: 2.7453468
+      value: 1.8615984
       inSlope: 0.0002521008
       outSlope: 0.0002521008
       tangentMode: 0
@@ -11306,7 +11306,7 @@ MonoBehaviour:
       outWeight: 0.9490372
     - serializedVersion: 3
       time: 31.197666
-      value: 2.2453468
+      value: 1.5887426
       inSlope: -0.0011940603
       outSlope: -0.0011940603
       tangentMode: 0
@@ -11315,7 +11315,7 @@ MonoBehaviour:
       outWeight: 1
     - serializedVersion: 3
       time: 41.197666
-      value: 2.4953468
+      value: 1.7251705
       inSlope: -0.0006914737
       outSlope: -0.0006914737
       tangentMode: 0
@@ -11324,7 +11324,7 @@ MonoBehaviour:
       outWeight: 0.8254898
     - serializedVersion: 3
       time: 51.197666
-      value: 1.9953468
+      value: 1.4523146
       inSlope: -0.0013177826
       outSlope: -0.0013177826
       tangentMode: 0
@@ -11333,7 +11333,7 @@ MonoBehaviour:
       outWeight: 1
     - serializedVersion: 3
       time: 61.197666
-      value: 2.2453468
+      value: 1.5887426
       inSlope: -0.0012763573
       outSlope: -0.0012763573
       tangentMode: 0
@@ -11342,7 +11342,7 @@ MonoBehaviour:
       outWeight: 1
     - serializedVersion: 3
       time: 71.19767
-      value: 1.7453468
+      value: 1.3158867
       inSlope: -0.0024415692
       outSlope: -0.0024415692
       tangentMode: 0
@@ -11351,7 +11351,7 @@ MonoBehaviour:
       outWeight: 0.48060992
     - serializedVersion: 3
       time: 81.19767
-      value: 1.9953468
+      value: 1.4523146
       inSlope: -0.00020877887
       outSlope: -0.00020877887
       tangentMode: 0
@@ -11360,7 +11360,7 @@ MonoBehaviour:
       outWeight: 1
     - serializedVersion: 3
       time: 91.19767
-      value: 1.4953468
+      value: 1.1794589
       inSlope: -0.00026605235
       outSlope: -0.00026605235
       tangentMode: 0
@@ -11369,7 +11369,7 @@ MonoBehaviour:
       outWeight: 1
     - serializedVersion: 3
       time: 100
-      value: 1.75
+      value: 1.3184261
       inSlope: -0.000195659
       outSlope: -0.000195659
       tangentMode: 0
@@ -11378,7 +11378,7 @@ MonoBehaviour:
       outWeight: 1
     - serializedVersion: 3
       time: 110
-      value: 1.25
+      value: 1.0455703
       inSlope: 0.00026101852
       outSlope: 0.00026101852
       tangentMode: 0
@@ -11387,7 +11387,7 @@ MonoBehaviour:
       outWeight: 1
     - serializedVersion: 3
       time: 120
-      value: 1.5
+      value: 1.1819981
       inSlope: -0.00030072063
       outSlope: -0.00030072063
       tangentMode: 0
@@ -11396,7 +11396,7 @@ MonoBehaviour:
       outWeight: 0.7500005
     - serializedVersion: 3
       time: 130
-      value: 1
+      value: 0.9091424
       inSlope: -0.020833824
       outSlope: -0.020833824
       tangentMode: 0
@@ -11405,7 +11405,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 140
-      value: 1.25
+      value: 1.0455703
       inSlope: -0.00067422155
       outSlope: -0.00067422155
       tangentMode: 0
@@ -11414,9 +11414,9 @@ MonoBehaviour:
       outWeight: 0.79479754
     - serializedVersion: 3
       time: 180
-      value: 0.8
-      inSlope: -0.0112499995
-      outSlope: -0.0112499995
+      value: 0.5
+      inSlope: -0.013639256
+      outSlope: -0.013639256
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -12360,6 +12360,8 @@ GameObject:
   - component: {fileID: 1986581932}
   - component: {fileID: 1986581931}
   - component: {fileID: 1986581930}
+  - component: {fileID: 1986581933}
+  - component: {fileID: 1986581934}
   m_Layer: 5
   m_Name: HammerCharacter
   m_TagString: Untagged
@@ -12448,6 +12450,78 @@ MonoBehaviour:
   sfx_hit: {fileID: 1560861413}
   maxHitPitch: 1.1
   minHitPitch: 0.7
+--- !u!61 &1986581933
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986581928}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -130, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 100, y: 100}
+  m_EdgeRadius: 0
+--- !u!50 &1986581934
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986581928}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &2041468975
 GameObject:
   m_ObjectHideFlags: 0

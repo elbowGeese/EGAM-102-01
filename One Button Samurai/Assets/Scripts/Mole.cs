@@ -17,6 +17,8 @@ public class Mole : MonoBehaviour
     public ParticleSystem neverHitParticlePrefab;
     public AudioSource sfxEndlessMiss;
 
+    public float backupDestroyTime = 2f;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -42,6 +44,8 @@ public class Mole : MonoBehaviour
 
             sfxEndlessMiss.Play();
         }
+
+        Destroy(gameObject, backupDestroyTime);
     }
 
     public void DestroyFromAnim()
@@ -67,6 +71,8 @@ public class Mole : MonoBehaviour
             GameObject.FindObjectOfType<EndlessMoleHandler>().RemoveMole();
         }
         anim.SetTrigger("whacked");
+
+        Destroy(gameObject, backupDestroyTime);
     }
 
     public void ChanceFlip()

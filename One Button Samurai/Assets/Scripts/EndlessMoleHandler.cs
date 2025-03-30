@@ -56,7 +56,6 @@ public class EndlessMoleHandler : MonoBehaviour
                 AddMole();
                 moleSpawnTimer = 0f;
                 nextMoleSpawn = timeBetweenMoleSpawn.Evaluate(overallTime);
-                Debug.Log(nextMoleSpawn);
             }
         }
     }
@@ -93,7 +92,10 @@ public class EndlessMoleHandler : MonoBehaviour
             holeIndex = Random.Range(0, holes.Length);
             if (!holes[holeIndex].hasMole)
             {
-                return holeIndex;
+                if (!holes[holeIndex].onPlayer)
+                {
+                    return holeIndex;
+                }
             }
 
             tries--;
