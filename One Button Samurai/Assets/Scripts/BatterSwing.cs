@@ -16,6 +16,8 @@ public class BatterSwing : MonoBehaviour
     public AnimationClip swingClip;
     int swingClipHash = Animator.StringToHash("Base Layer" + ".tempPlayer_swing");
 
+    public float previousTimeIndex = 0f;
+
     public Transform mouseFollow;
 
     private void Awake()
@@ -52,6 +54,7 @@ public class BatterSwing : MonoBehaviour
             journey = (currentProgress - Time.deltaTime * speed) / Mathf.Abs(distance);
         }
         float timeIndex = Mathf.Lerp(currentProgress, newProgress, journey);
+        previousTimeIndex = timeIndex;
 
         // play animation at the time index
         anim.Play(swingClip.name, animLayer, timeIndex);
@@ -81,6 +84,22 @@ public class BatterSwing : MonoBehaviour
         else
         {
             return null;
+        }
+    }
+
+    public bool IsAtMaxSwing(out float battingSpeed)
+    {
+        float currentTimeIndex = GetCurrentAnimatorTime();
+
+        battingSpeed = currentTimeIndex - previousTimeIndex;
+
+        if(currentTimeIndex > 0.9f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
