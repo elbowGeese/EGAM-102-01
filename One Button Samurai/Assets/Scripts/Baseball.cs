@@ -12,6 +12,9 @@ public class Baseball : MonoBehaviour
     // travelling
     public AnimationCurve sizeOverTime;
     public AnimationCurve rotationOverTime;
+    private Vector2 initPosition;
+    private Vector2 targetPosition;
+    public float targetPosOffset = 1f;
 
     private float timePassed = 0f;
     public float timeAlive = 4f;
@@ -21,6 +24,16 @@ public class Baseball : MonoBehaviour
     private float windowTime = 0f;
     [Range(0f,1f)]
     public float minSwingSpeed = 0.5f;
+
+    // hit
+    private Vector2 hitInitPos;
+    private Vector2 hitTargetPos;
+    private float hitTimePassed = 0f;
+    public float hitTimeAlive = 0.5f;
+    private float hitMinY = 4f;
+    public float hitTargetPosOffsetX = 15f;
+    public float hitTargetPosOffsetY = 4f;
+    private Vector2 hitInitSize;
 
     // miss
     private float timeToFadeOut = 0f;
@@ -54,6 +67,22 @@ public class Baseball : MonoBehaviour
     private void SetState(BaseballState newState)
     {
         state = newState;
+
+        switch (state)
+        {
+            case BaseballState.TRAVELLING:
+                initPosition = transform.position;
+                Vector2 aimboxPos = GameObject.FindWithTag("AimBox").transform.position;
+                targetPosition = new Vector2(aimboxPos.x + Random.Range(-targetPosOffset, targetPosOffset), aimboxPos.y + Random.Range(-targetPosOffset, targetPosOffset));
+                break;
+            case BaseballState.HIT:
+                hitInitSize = transform.localScale;
+                hitInitPos = transform.position;
+                hitTargetPos = new Vector2(Random.Range(-hitTargetPosOffsetX, hitTargetPosOffsetX), hitMinY + Random.Range(0f, hitTargetPosOffsetY));
+                break;
+            default:
+                break;
+        }
     }
 
     void TravellingUpdate()
@@ -67,6 +96,9 @@ public class Baseball : MonoBehaviour
         // rotation
         float currentRoatationSpeed = rotationOverTime.Evaluate(timePassed);
         transform.Rotate(new Vector3(0, 0, 1) * currentRoatationSpeed * Time.deltaTime);
+
+        // position
+        transform.position = Vector2.Lerp(initPosition, targetPosition, timePassed / timeAlive);
 
         // lifetime
         if (timePassed > timeAlive)
@@ -95,8 +127,20 @@ public class Baseball : MonoBehaviour
 
     void HitUpdate()
     {
-        Debug.Log("HIT!");
-        Destroy(gameObject);
+        hitTimePassed += Time.deltaTime;
+
+        // size
+        transform.localScale = Vector2.Lerp(hitInitSize, Vector2.zero, hitTimePassed / hitTimeAlive);
+
+        // rotation
+
+        // position
+        transform.position = Vector2.Lerp(hitInitPos, hitTargetPos, hitTimePassed / hitTimeAlive);
+
+        if(hitTimePassed > hitTimeAlive)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void MissUpdate()
