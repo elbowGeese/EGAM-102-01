@@ -76,9 +76,12 @@ public class Baseball : MonoBehaviour
                 targetPosition = new Vector2(aimboxPos.x + Random.Range(-targetPosOffset, targetPosOffset), aimboxPos.y + Random.Range(-targetPosOffset, targetPosOffset));
                 break;
             case BaseballState.HIT:
+                FindFirstObjectByType<HitCounter>().hits++;
+
                 hitInitSize = transform.localScale;
                 hitInitPos = transform.position;
                 hitTargetPos = new Vector2(Random.Range(-hitTargetPosOffsetX, hitTargetPosOffsetX), hitMinY + Random.Range(0f, hitTargetPosOffsetY));
+
                 break;
             default:
                 break;
@@ -114,8 +117,10 @@ public class Baseball : MonoBehaviour
         // if player swings in time
         if (FindAnyObjectByType<BatterSwing>().IsAtMaxSwing(out float battingSpeed))
         {
-            Debug.Log(battingSpeed);
-            if(battingSpeed >= minSwingSpeed) { SetState(BaseballState.HIT); }
+            if(battingSpeed >= minSwingSpeed) 
+            { 
+                SetState(BaseballState.HIT); 
+            }
         }
 
         // window open whole time
