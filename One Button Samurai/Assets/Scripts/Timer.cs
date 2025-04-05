@@ -17,9 +17,13 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
+        // paused
+        if (PauseHandler.instance.pauseMenu.activeSelf) { return; }
+
+        // unpaused
         if (secondsPassed > 0f)
         {
-            secondsPassed -= Time.deltaTime; // will probably change this later to system time instead of game time
+            secondsPassed -= Time.unscaledDeltaTime;
 
             int minutes = TimeSpan.FromSeconds(secondsPassed).Minutes;
             int seconds = (int) secondsPassed - (minutes * 60);

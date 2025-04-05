@@ -33,6 +33,11 @@ public class BatterSwing : MonoBehaviour
 
     void Update()
     {
+        // paused
+        if (PauseHandler.instance.pauseMenu.activeSelf) { return; }
+
+        // unpaused
+
         // get new progress to lerp to based on mouse follow position
         float mousePosX = mouseFollow.position.x;
         float newProgress = Mathf.InverseLerp(minX, maxX, mousePosX);

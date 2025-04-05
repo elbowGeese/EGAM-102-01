@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class PauseHandler : MonoBehaviour
 {
+    public static PauseHandler instance;
+    
     public GameObject pauseMenu;
     public GameObject pauseButton;
 
     void Start()
     {
+        if (instance == null) { instance = this; }
+        else { Destroy(gameObject); }
+
         ClosePauseMenu();
     }
 
@@ -19,7 +24,7 @@ public class PauseHandler : MonoBehaviour
         pauseMenu.SetActive(true);
         pauseButton.SetActive(false);
 
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
     }
 
     // closes the pause menu and shows the pause button
@@ -29,6 +34,6 @@ public class PauseHandler : MonoBehaviour
         pauseMenu.SetActive(false);
         pauseButton.SetActive(true);
 
-        Time.timeScale = 1f;
+        //Time.timeScale = 1f;
     }
 }

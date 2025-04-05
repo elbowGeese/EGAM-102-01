@@ -49,6 +49,10 @@ public class Baseball : MonoBehaviour
 
     void Update()
     {
+        // paused
+        if (PauseHandler.instance.pauseMenu.activeSelf) { return; }
+
+        // unpaused
         switch (state)
         {
             case BaseballState.TRAVELLING:

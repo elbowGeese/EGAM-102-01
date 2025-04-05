@@ -10,6 +10,10 @@ public class Pitcher : MonoBehaviour
 
     void Update()
     {
+        // paused
+        if (PauseHandler.instance.pauseMenu.activeSelf) { return; }
+
+        // unpaused
         Baseball baseball = FindAnyObjectByType<Baseball>();
         if(baseball == null && !isSpawning)
         {
