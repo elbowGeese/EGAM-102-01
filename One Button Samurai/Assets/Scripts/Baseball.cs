@@ -9,6 +9,14 @@ public class Baseball : MonoBehaviour
 
     private SpriteRenderer sp;
 
+    // positioning guide
+    public Transform positioningGuide;
+    public float guideStartScale = 1f;
+    public float guideEndScale = 0.18f;
+    public Color guideStartColor;
+    public Color guideMiddleColor;
+    public Color guideEndColor;
+
     // travelling
     public AnimationCurve sizeOverTime;
     public AnimationCurve rotationOverTime;
@@ -43,6 +51,9 @@ public class Baseball : MonoBehaviour
         sp = GetComponent<SpriteRenderer>();
 
         transform.Rotate(new Vector3(0, 0, 1) * Random.Range(0, 360));
+
+        positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = guideStartColor;
+        positioningGuide.localScale = new Vector2(guideStartScale, guideStartScale);
 
         SetState(BaseballState.TRAVELLING);
     }
@@ -97,11 +108,12 @@ public class Baseball : MonoBehaviour
         timePassed += Time.deltaTime;
 
         // size
-        float currentSize = sizeOverTime.Evaluate(timePassed);
+        float currentSize = sizeOverTime.Evaluate(timePassed / timeAlive);
         transform.localScale = new Vector2(currentSize, currentSize);
+        UpdatePositioningGuide(timePassed);
 
         // rotation
-        float currentRoatationSpeed = rotationOverTime.Evaluate(timePassed);
+        float currentRoatationSpeed = rotationOverTime.Evaluate(timePassed / timeAlive);
         transform.Rotate(new Vector3(0, 0, 1) * currentRoatationSpeed * Time.deltaTime);
 
         // position
@@ -114,6 +126,22 @@ public class Baseball : MonoBehaviour
         }
     }
 
+    private void UpdatePositioningGuide(float timePassed)
+    {
+        // size
+        positioningGuide.localScale = Vector2.Lerp(new Vector2(guideStartScale, guideStartScale), new Vector2(guideEndScale, guideEndScale), timePassed / timeAlive);
+
+        // color
+        if (timePassed <= timeAlive / 2)
+        {
+            positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = Color.Lerp(guideStartColor, guideMiddleColor, timePassed / (timeAlive / 2));
+        }
+        else
+        {
+            positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = Color.Lerp(guideMiddleColor, guideEndColor, (timePassed - (timeAlive / 2)) / (timeAlive / 2));
+        }
+    }
+
     void HitWindowUpdate()
     {
         windowTime += Time.deltaTime;
@@ -122,7 +150,8 @@ public class Baseball : MonoBehaviour
         if (FindAnyObjectByType<BatterSwing>().IsAtMaxSwing(out float battingSpeed))
         {
             if(battingSpeed >= minSwingSpeed) 
-            { 
+            {
+                positioningGuide.localScale = Vector3.zero;
                 SetState(BaseballState.HIT); 
             }
         }
@@ -130,6 +159,7 @@ public class Baseball : MonoBehaviour
         // window open whole time
         if(windowTime >= swingWindow)
         {
+            positioningGuide.localScale = Vector3.zero;
             SetState(BaseballState.MISS);
         }
     }
