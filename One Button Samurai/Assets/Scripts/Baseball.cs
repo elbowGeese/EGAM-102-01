@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Baseball : MonoBehaviour
 {
-    enum BaseballState { TRAVELLING, HITWINDOW, HIT, MISS }
-    private BaseballState state;
+    public enum BaseballState { TRAVELLING, HITWINDOW, HIT, MISS }
+    public BaseballState state;
 
     private SpriteRenderer sp;
 
@@ -16,6 +16,8 @@ public class Baseball : MonoBehaviour
     public Color guideStartColor;
     public Color guideMiddleColor;
     public Color guideEndColor;
+    [Range(0f, 1f)]
+    public float percentToGreen = 0.8f;
 
     // travelling
     public AnimationCurve sizeOverTime;
@@ -90,6 +92,9 @@ public class Baseball : MonoBehaviour
                 Vector2 aimboxPos = GameObject.FindWithTag("AimBox").transform.position;
                 targetPosition = new Vector2(aimboxPos.x + Random.Range(-targetPosOffset, targetPosOffset), aimboxPos.y + Random.Range(-targetPosOffset, targetPosOffset));
                 break;
+            case BaseballState.HITWINDOW:
+                positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = guideEndColor;
+                break;
             case BaseballState.HIT:
                 FindFirstObjectByType<HitCounter>().hits++;
 
@@ -132,13 +137,13 @@ public class Baseball : MonoBehaviour
         positioningGuide.localScale = Vector2.Lerp(new Vector2(guideStartScale, guideStartScale), new Vector2(guideEndScale, guideEndScale), timePassed / timeAlive);
 
         // color
-        if (timePassed <= timeAlive / 2)
+        if (timePassed <= timeAlive * percentToGreen)
         {
-            positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = Color.Lerp(guideStartColor, guideMiddleColor, timePassed / (timeAlive / 2));
+            positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = Color.Lerp(guideStartColor, guideMiddleColor, timePassed / (timeAlive * percentToGreen));
         }
         else
         {
-            positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = Color.Lerp(guideMiddleColor, guideEndColor, (timePassed - (timeAlive / 2)) / (timeAlive / 2));
+            positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = Color.Lerp(guideMiddleColor, guideEndColor, (timePassed - (timeAlive * percentToGreen)) / (timeAlive * percentToGreen));
         }
     }
 

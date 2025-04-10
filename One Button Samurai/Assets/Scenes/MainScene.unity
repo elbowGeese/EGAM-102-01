@@ -1651,6 +1651,7 @@ GameObject:
   - component: {fileID: 672018917}
   - component: {fileID: 672018918}
   - component: {fileID: 672018919}
+  - component: {fileID: 672018920}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1718,6 +1719,24 @@ MonoBehaviour:
   swingClip: {fileID: 7400000, guid: 76a20b144b350fc419cf1f569d2d2910, type: 2}
   previousTimeIndex: 0
   mouseFollow: {fileID: 756588335}
+--- !u!114 &672018920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672018916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 508c26c7c06f5e543b6171a5a20673ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooEarlyWindow: 0.15
+  feedbackPosition: {fileID: 1122409183}
+  tooEarlyPrefab: {fileID: 3820643230233950787, guid: 9c24154a5c165744880ae6749284a47a, type: 3}
+  tooLatePrefab: {fileID: 522542123144770102, guid: 571368b1858b20a43b79b201fe40d6ab, type: 3}
+  tooSlowPrefab: {fileID: 6215364187506699406, guid: bbdfe11c337d9a54e9368f78c22c7a83, type: 3}
+  perfectPrefab: {fileID: 1235955943153107255, guid: bb6e552f17719244db204ab16a455728, type: 3}
 --- !u!1 &730905849
 GameObject:
   m_ObjectHideFlags: 0
