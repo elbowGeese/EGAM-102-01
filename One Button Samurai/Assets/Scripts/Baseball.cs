@@ -96,12 +96,15 @@ public class Baseball : MonoBehaviour
                 positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = guideEndColor;
                 break;
             case BaseballState.HIT:
-                FindFirstObjectByType<HitCounter>().hits++;
+                FindFirstObjectByType<HitCounter>().AddHit();
 
                 hitInitSize = transform.localScale;
                 hitInitPos = transform.position;
                 hitTargetPos = new Vector2(Random.Range(-hitTargetPosOffsetX, hitTargetPosOffsetX), hitMinY + Random.Range(0f, hitTargetPosOffsetY));
 
+                break;
+            case BaseballState.MISS:
+                FindFirstObjectByType<HitCounter>().ResetStreak();
                 break;
             default:
                 break;

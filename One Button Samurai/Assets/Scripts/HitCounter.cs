@@ -6,7 +6,9 @@ using UnityEngine;
 public class HitCounter : MonoBehaviour
 {
     public int hits = 0;
+    public int streak = 0;
     public TMP_Text counter;
+    public TMP_Text streakCounter;
 
     private void Start()
     {
@@ -16,6 +18,30 @@ public class HitCounter : MonoBehaviour
     void Update()
     {
         counter.text = hits.ToString();
+        StreakUpdate();
+    }
+
+    void StreakUpdate()
+    {
+        if (streak <= 0)
+        {
+            streakCounter.text = "";
+        }
+        else
+        {
+            streakCounter.text = streak.ToString();
+        }
+    }
+
+    public void AddHit()
+    {
+        hits++;
+        streak++;
+    }
+
+    public void ResetStreak()
+    {
+        streak = 0;
     }
 
     void SaveHitCountToPlayerPrefs()
