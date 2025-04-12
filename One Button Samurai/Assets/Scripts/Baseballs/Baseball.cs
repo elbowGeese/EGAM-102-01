@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class Baseball : MonoBehaviour
 {
+    [Header("Main")]
+    public ThrowType.PitchType pitchType;
+
     public enum BaseballState { TRAVELLING, HITWINDOW, HIT, MISS }
     public BaseballState state;
 
     private SpriteRenderer sp;
 
-    // positioning guide
+    [Header("Positioning")]
     public Transform positioningGuide;
     public float guideStartScale = 1f;
     public float guideEndScale = 0.18f;
@@ -19,9 +22,10 @@ public class Baseball : MonoBehaviour
     [Range(0f, 1f)]
     public float percentToGreen = 0.8f;
 
-    // travelling
+    [Header("Travelling State")]
     public AnimationCurve sizeOverTime;
     public AnimationCurve rotationOverTime;
+    public AnimationCurve pathCurveOverTime;
     private Vector2 initPosition;
     private Vector2 targetPosition;
     public float targetPosOffset = 1f;
@@ -29,23 +33,23 @@ public class Baseball : MonoBehaviour
     private float timePassed = 0f;
     public float timeAlive = 4f;
 
-    // hit window
+    [Header("Hit Window State")]
     public float swingWindow = 1f;
     private float windowTime = 0f;
     [Range(0f,1f)]
     public float minSwingSpeed = 0.5f;
 
-    // hit
-    private Vector2 hitInitPos;
-    private Vector2 hitTargetPos;
-    private float hitTimePassed = 0f;
+    [Header("Hit State")]
     public float hitTimeAlive = 0.5f;
+    private float hitTimePassed = 0f;
     private float hitMinY = 4f;
     public float hitTargetPosOffsetX = 15f;
     public float hitTargetPosOffsetY = 4f;
     private Vector2 hitInitSize;
+    private Vector2 hitInitPos;
+    private Vector2 hitTargetPos;
 
-    // miss
+    [Header("Miss State")]
     private float timeToFadeOut = 0f;
 
     private void Start()
@@ -89,14 +93,16 @@ public class Baseball : MonoBehaviour
         {
             case BaseballState.TRAVELLING:
                 initPosition = transform.position;
-                Vector2 aimboxPos = GameObject.FindWithTag("AimBox").transform.position;
+                Vector2 aimboxPos = FindAimbox();
                 targetPosition = new Vector2(aimboxPos.x + Random.Range(-targetPosOffset, targetPosOffset), aimboxPos.y + Random.Range(-targetPosOffset, targetPosOffset));
                 break;
             case BaseballState.HITWINDOW:
                 positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = guideEndColor;
                 break;
             case BaseballState.HIT:
-                FindFirstObjectByType<HitCounter>().AddHit();
+                if (FindFirstObjectByType<HitCounter>()) { FindFirstObjectByType<HitCounter>().AddHit(); }
+
+                if (FindFirstObjectByType<BallTypeDisplay>()) { FindFirstObjectByType<BallTypeDisplay>().Show(pitchType.ToString()); }
 
                 hitInitSize = transform.localScale;
                 hitInitPos = transform.position;
@@ -104,11 +110,53 @@ public class Baseball : MonoBehaviour
 
                 break;
             case BaseballState.MISS:
-                FindFirstObjectByType<HitCounter>().ResetStreak();
+                if (FindFirstObjectByType<HitCounter>()) { FindFirstObjectByType<HitCounter>().ResetStreak(); }
+
+                if (FindFirstObjectByType<BallTypeDisplay>()) { FindFirstObjectByType<BallTypeDisplay>().Show(pitchType.ToString()); }
+
                 break;
             default:
                 break;
         }
+    }
+
+    private Vector2 FindAimbox()
+    {
+        GameObject[] aimBoxes = GameObject.FindGameObjectsWithTag("AimBox");
+
+        switch (pitchType)
+        {
+            case ThrowType.PitchType.FASTBALL:
+                foreach(GameObject aimBox in aimBoxes)
+                {
+                    if(aimBox.name == "MiddleAim") { return aimBox.transform.position; }
+                } 
+                break;
+            case ThrowType.PitchType.CURVEBALL:
+                foreach (GameObject aimBox in aimBoxes)
+                {
+                    if (aimBox.name == "OuterAim") { return aimBox.transform.position; }
+                }
+                break;
+            case ThrowType.PitchType.SCREWBALL:
+                foreach (GameObject aimBox in aimBoxes)
+                {
+                    if (aimBox.name == "InnerAim") { return aimBox.transform.position; }
+                }
+                break;
+            case ThrowType.PitchType.SPLITTER:
+                foreach (GameObject aimBox in aimBoxes)
+                {
+                    if (aimBox.name == "InnerAim") { return aimBox.transform.position; }
+                }
+                break;
+            default:
+                Debug.Log("No aimbox relegated to pitch.");
+                break;
+        }
+
+        // if it is assigned wrong, just grab the first aimbox the computer found
+        return aimBoxes[0].transform.position;
     }
 
     void TravellingUpdate()
@@ -121,11 +169,13 @@ public class Baseball : MonoBehaviour
         UpdatePositioningGuide(timePassed);
 
         // rotation
-        float currentRoatationSpeed = rotationOverTime.Evaluate(timePassed / timeAlive);
-        transform.Rotate(new Vector3(0, 0, 1) * currentRoatationSpeed * Time.deltaTime);
+        float currentRotationSpeed = rotationOverTime.Evaluate(timePassed / timeAlive);
+        transform.Rotate(new Vector3(0, 0, 1) * currentRotationSpeed * Time.deltaTime);
 
         // position
-        transform.position = Vector2.Lerp(initPosition, targetPosition, timePassed / timeAlive);
+        Vector2 newPos = Vector2.Lerp(initPosition, targetPosition, timePassed / timeAlive);
+        // path curve
+        transform.position = new Vector2(newPos.x + pathCurveOverTime.Evaluate(timePassed / timeAlive), newPos.y);
 
         // lifetime
         if (timePassed > timeAlive)

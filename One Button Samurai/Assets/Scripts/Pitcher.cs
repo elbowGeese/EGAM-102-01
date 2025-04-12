@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class Pitcher : MonoBehaviour
 {
-    public GameObject baseballPrefab;
+    public GameObject fastballPrefab;
+    public int fastballWeight = 5;
+    public GameObject curveballPrefab;
+    public int curveballWeight = 2;
+    public GameObject screwballPrefab;
+    public int screwballWeight = 2;
+    public GameObject splitterPrefab;
+    public int splitterWeight = 1;
+
     public AnimationCurve bufferSpawnTime;
     private bool isSpawning = false;
 
@@ -34,9 +42,36 @@ public class Pitcher : MonoBehaviour
 
         yield return new WaitForSeconds(bufferSpawnTime.Evaluate(hitCounter.streak));
 
-        GameObject baseball = Instantiate(baseballPrefab);
+        GameObject baseball = Instantiate(ChooseBaseball());
         baseball.transform.position = transform.position;
 
         isSpawning = false;
+    }
+
+    private GameObject ChooseBaseball()
+    {
+        List<GameObject> baseballList = new List<GameObject>();
+
+        for(int i = 0; i < fastballWeight; i++)
+        {
+            baseballList.Add(fastballPrefab);
+        }
+
+        for (int i = 0; i < curveballWeight; i++)
+        {
+            baseballList.Add(curveballPrefab);
+        }
+
+        for (int i = 0; i < screwballWeight; i++)
+        {
+            baseballList.Add(screwballPrefab);
+        }
+
+        for (int i = 0; i < splitterWeight; i++)
+        {
+            baseballList.Add(splitterPrefab);
+        }
+
+        return baseballList[Random.Range(0, baseballList.Count)];
     }
 }
