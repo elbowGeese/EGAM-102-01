@@ -360,7 +360,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   targetPosOffset: 0.3
   timeAlive: 1
-  swingWindow: 0.15
+  swingWindow: 0.2
   minSwingSpeed: 0.1
   hitTimeAlive: 0.25
   hitTargetPosOffsetX: 15

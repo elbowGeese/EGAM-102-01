@@ -42,6 +42,12 @@ public class SwingFeedback : MonoBehaviour
                     case Baseball.BaseballState.MISS:
                         SpawnSwingFeedback(SwingFeedbackType.TooLate);
                         break;
+                    case Baseball.BaseballState.HITWINDOW:
+                        if (battingSpeed < ball.minSwingSpeed)
+                        {
+                            SpawnSwingFeedback(SwingFeedbackType.TooSlow);
+                        }
+                        break;
                     default:
                         Debug.Log("No corresponding swing feedback type.");
                         break;
