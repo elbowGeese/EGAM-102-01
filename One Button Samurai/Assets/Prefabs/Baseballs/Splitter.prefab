@@ -185,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pitchType: 3
   state: 0
+  hitState: 0
   positioningGuide: {fileID: 8213953895617321122}
   guideStartScale: 1
   guideEndScale: 0.18
@@ -276,10 +277,17 @@ MonoBehaviour:
   targetPosOffset: 0.3
   timeAlive: 1.3
   swingWindow: 0.1
-  minSwingSpeed: 0.2
+  minSwingSpeed: 0.1
   hitTimeAlive: 0.25
   hitTargetPosOffsetX: 15
-  hitTargetPosOffsetY: 4
+  minHomerunY: 6
+  maxHomerunY: 8
+  minOutsideY: 4
+  maxOutsideY: 6
+  minInsideY: 0
+  maxInsideY: 4
+  minGroundballY: -4
+  maxGroundballY: -2
 --- !u!1 &7785098370759912600
 GameObject:
   m_ObjectHideFlags: 0

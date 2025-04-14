@@ -8,7 +8,6 @@ public class SwingFeedback : MonoBehaviour
 
     BatterSwing bat;
     private bool isSwung = false;
-    public float tooEarlyWindow = 0.1f;
 
     public Transform feedbackPosition;
     public GameObject tooEarlyPrefab;
@@ -34,7 +33,19 @@ public class SwingFeedback : MonoBehaviour
             {
                 isSwung = true;
 
-                StartCoroutine(WaitToSpawn(ball, battingSpeed));
+                // check for ball state
+                switch (ball.state)
+                {
+                    case Baseball.BaseballState.TRAVELLING:
+                        SpawnSwingFeedback(SwingFeedbackType.TooEarly);
+                        break;
+                    case Baseball.BaseballState.MISS:
+                        SpawnSwingFeedback(SwingFeedbackType.TooLate);
+                        break;
+                    default:
+                        Debug.Log("No corresponding swing feedback type.");
+                        break;
+                }
             }
             else if(isSwung && !bat.IsAtMaxSwing(out float battingSpeed2))
             {
@@ -44,39 +55,7 @@ public class SwingFeedback : MonoBehaviour
         }
     }
 
-    IEnumerator WaitToSpawn(Baseball ball, float battingSpeed)
-    {
-        yield return new WaitForSeconds(tooEarlyWindow);
-
-        // check for ball state
-        switch (ball.state)
-        {
-            case Baseball.BaseballState.TRAVELLING:
-                SpawnSwingFeedback(SwingFeedbackType.TooEarly);
-                break;
-            case Baseball.BaseballState.MISS:
-                SpawnSwingFeedback(SwingFeedbackType.TooLate);
-                break;
-            case Baseball.BaseballState.HITWINDOW:
-                if (battingSpeed >= ball.minSwingSpeed)
-                {
-                    SpawnSwingFeedback(SwingFeedbackType.Perfect);
-                }
-                else
-                {
-                    SpawnSwingFeedback(SwingFeedbackType.TooSlow);
-                }
-                break;
-            case Baseball.BaseballState.HIT:
-                SpawnSwingFeedback(SwingFeedbackType.Perfect);
-                break;
-            default:
-                Debug.Log("No corresponding swing feedback type.");
-                break;
-        }
-    }
-
-    private void SpawnSwingFeedback(SwingFeedbackType feedbackType)
+    public void SpawnSwingFeedback(SwingFeedbackType feedbackType)
     {
         // spawn the corresponding feedback
         switch (feedbackType)

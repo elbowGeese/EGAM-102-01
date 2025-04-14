@@ -185,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pitchType: 1
   state: 0
+  hitState: 0
   positioningGuide: {fileID: 3365099806056319596}
   guideStartScale: 1
   guideEndScale: 0.18
@@ -220,8 +221,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 180
+      time: 0.00063085556
+      value: 249.8656
       inSlope: -97.38315
       outSlope: -97.38315
       tangentMode: 34
@@ -229,8 +230,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.8755717
-      value: 94.73407
+      time: 0.8762026
+      value: 164.59967
       inSlope: -73.218765
       outSlope: -73.218765
       tangentMode: 0
@@ -240,8 +241,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 50
-      inSlope: -359.51694
-      outSlope: -359.51694
+      inSlope: -925.70325
+      outSlope: -925.70325
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -285,10 +286,17 @@ MonoBehaviour:
   targetPosOffset: 0.3
   timeAlive: 1
   swingWindow: 0.15
-  minSwingSpeed: 0.2
+  minSwingSpeed: 0.1
   hitTimeAlive: 0.25
   hitTargetPosOffsetX: 15
-  hitTargetPosOffsetY: 4
+  minHomerunY: 6
+  maxHomerunY: 8
+  minOutsideY: 4
+  maxOutsideY: 6
+  minInsideY: 0
+  maxInsideY: 4
+  minGroundballY: -4
+  maxGroundballY: -2
 --- !u!1 &7165921990377859055
 GameObject:
   m_ObjectHideFlags: 0

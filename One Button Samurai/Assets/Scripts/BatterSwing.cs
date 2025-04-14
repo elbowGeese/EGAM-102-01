@@ -16,7 +16,8 @@ public class BatterSwing : MonoBehaviour
     public AnimationClip swingClip;
     int swingClipHash = Animator.StringToHash("Base Layer" + ".tempPlayer_swing");
 
-    public float previousTimeIndex = 0f;
+    private float lastMouseX = 0f;
+    private float battingSpeed = 0f;
 
     public Transform mouseFollow;
 
@@ -40,6 +41,8 @@ public class BatterSwing : MonoBehaviour
 
         // get new progress to lerp to based on mouse follow position
         float mousePosX = mouseFollow.position.x;
+        battingSpeed = mousePosX - lastMouseX;
+        lastMouseX = mousePosX;
         float newProgress = Mathf.InverseLerp(minX, maxX, mousePosX);
 
         // get the animation's current progress
@@ -59,7 +62,6 @@ public class BatterSwing : MonoBehaviour
             journey = (currentProgress - Time.deltaTime * speed) / Mathf.Abs(distance);
         }
         float timeIndex = Mathf.Lerp(currentProgress, newProgress, journey);
-        previousTimeIndex = timeIndex;
 
         // play animation at the time index
         anim.Play(swingClip.name, animLayer, timeIndex);
@@ -96,7 +98,8 @@ public class BatterSwing : MonoBehaviour
     {
         float currentTimeIndex = GetCurrentAnimatorTime();
 
-        battingSpeed = currentTimeIndex - previousTimeIndex;
+        battingSpeed = this.battingSpeed;
+        Debug.Log(battingSpeed);
 
         if(currentTimeIndex > 0.9f)
         {

@@ -10,6 +10,9 @@ public class Baseball : MonoBehaviour
     public enum BaseballState { TRAVELLING, HITWINDOW, HIT, MISS }
     public BaseballState state;
 
+    public enum HitState { INSIDE, OUTSIDE, HOMERUN, GROUNDBALL }
+    public HitState hitState;
+
     private SpriteRenderer sp;
 
     [Header("Positioning")]
@@ -38,16 +41,31 @@ public class Baseball : MonoBehaviour
     private float windowTime = 0f;
     [Range(0f,1f)]
     public float minSwingSpeed = 0.5f;
+    private bool alreadySwung = false;
 
     [Header("Hit State")]
     public float hitTimeAlive = 0.5f;
     private float hitTimePassed = 0f;
-    private float hitMinY = 4f;
     public float hitTargetPosOffsetX = 15f;
-    public float hitTargetPosOffsetY = 4f;
     private Vector2 hitInitSize;
     private Vector2 hitInitPos;
     private Vector2 hitTargetPos;
+
+    [Header("Hit State : Homerun")]
+    public float minHomerunY = 6f;
+    public float maxHomerunY = 8f;
+
+    [Header("Hit State : Outside")]
+    public float minOutsideY = 4f;
+    public float maxOutsideY = 6f;
+
+    [Header("Hit State : Inside")]
+    public float minInsideY = 0f;
+    public float maxInsideY = 4f;
+
+    [Header("Hit State : Ground Ball")]
+    public float minGroundballY = -4;
+    public float maxGroundballY = -2;
 
     [Header("Miss State")]
     private float timeToFadeOut = 0f;
@@ -85,9 +103,10 @@ public class Baseball : MonoBehaviour
         }
     }
 
-    private void SetState(BaseballState newState)
+    private void SetState(BaseballState newState, HitState newHitState = HitState.HOMERUN)
     {
         state = newState;
+        hitState = newHitState;
 
         switch (state)
         {
@@ -98,19 +117,40 @@ public class Baseball : MonoBehaviour
                 break;
             case BaseballState.HITWINDOW:
                 positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = guideEndColor;
+                alreadySwung = false;
                 break;
             case BaseballState.HIT:
-                if (FindFirstObjectByType<HitCounter>()) { FindFirstObjectByType<HitCounter>().AddHit(); }
+                if (FindFirstObjectByType<HitCounter>()) { FindFirstObjectByType<HitCounter>().AddHit(hitState); }
 
                 if (FindFirstObjectByType<BallTypeDisplay>()) { FindFirstObjectByType<BallTypeDisplay>().Show(pitchType.ToString()); }
 
                 hitInitSize = transform.localScale;
                 hitInitPos = transform.position;
-                hitTargetPos = new Vector2(Random.Range(-hitTargetPosOffsetX, hitTargetPosOffsetX), hitMinY + Random.Range(0f, hitTargetPosOffsetY));
+
+                float randY = 0f;
+                switch (hitState)
+                {
+                    case HitState.INSIDE:
+                        randY = Random.Range(minInsideY, maxInsideY);
+                        break;
+                    case HitState.OUTSIDE:
+                        randY = Random.Range(minOutsideY, maxOutsideY);
+                        break;
+                    case HitState.HOMERUN:
+                        randY = Random.Range(minHomerunY, maxHomerunY);
+                        break;
+                    case HitState.GROUNDBALL:
+                        randY = Random.Range(minGroundballY, maxGroundballY);
+                        break;
+                    default:
+                        Debug.Log("No hit state range to target.");
+                        break;
+                }
+                hitTargetPos = new Vector2(Random.Range(-hitTargetPosOffsetX, hitTargetPosOffsetX), randY);
 
                 break;
             case BaseballState.MISS:
-                if (FindFirstObjectByType<HitCounter>()) { FindFirstObjectByType<HitCounter>().ResetStreak(); }
+                if (pitchType != ThrowType.PitchType.SPLITTER && FindFirstObjectByType<HitCounter>()) { FindFirstObjectByType<HitCounter>().ResetStreak(); }
 
                 if (FindFirstObjectByType<BallTypeDisplay>()) { FindFirstObjectByType<BallTypeDisplay>().Show(pitchType.ToString()); }
 
@@ -207,10 +247,41 @@ public class Baseball : MonoBehaviour
         // if player swings in time
         if (FindAnyObjectByType<BatterSwing>().IsAtMaxSwing(out float battingSpeed))
         {
-            if(battingSpeed >= minSwingSpeed) 
+
+            if (battingSpeed >= minSwingSpeed) 
             {
                 positioningGuide.localScale = Vector3.zero;
-                SetState(BaseballState.HIT); 
+                if (FindFirstObjectByType<SwingFeedback>() != null)
+                {
+                    FindFirstObjectByType<SwingFeedback>().SpawnSwingFeedback(SwingFeedback.SwingFeedbackType.Perfect);
+                }
+
+                switch (pitchType)
+                {
+                    case ThrowType.PitchType.FASTBALL:
+                        SetState(BaseballState.HIT, HitState.HOMERUN);
+                        break;
+                    case ThrowType.PitchType.CURVEBALL:
+                        SetState(BaseballState.HIT, HitState.HOMERUN);
+                        break;
+                    case ThrowType.PitchType.SCREWBALL:
+                        SetState(BaseballState.HIT, HitState.HOMERUN);
+                        break;
+                    case ThrowType.PitchType.SPLITTER:
+                        SetState(BaseballState.HIT, HitState.GROUNDBALL);
+                        break;
+                    default:
+                        Debug.Log("Unknown pitch type, unknown hit type...");
+                        SetState(BaseballState.HIT);
+                        break;
+                }
+            }
+            else
+            {
+                if (FindFirstObjectByType<SwingFeedback>() != null)
+                {
+                    //FindFirstObjectByType<SwingFeedback>().SpawnSwingFeedback(SwingFeedback.SwingFeedbackType.TooSlow);
+                }
             }
         }
 
