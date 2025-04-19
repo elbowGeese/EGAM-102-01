@@ -41,7 +41,7 @@ public class Baseball : MonoBehaviour
     private float windowTime = 0f;
     [Range(0f,1f)]
     public float minSwingSpeed = 0.5f;
-    private bool alreadySwung = false;
+    public GameObject boomParticle;
 
     [Header("Hit State")]
     public float hitTimeAlive = 0.5f;
@@ -117,7 +117,6 @@ public class Baseball : MonoBehaviour
                 break;
             case BaseballState.HITWINDOW:
                 positioningGuide.gameObject.GetComponent<SpriteRenderer>().color = guideEndColor;
-                alreadySwung = false;
                 break;
             case BaseballState.HIT:
                 if (FindFirstObjectByType<HitCounter>()) { FindFirstObjectByType<HitCounter>().AddHit(hitState); }
@@ -256,6 +255,9 @@ public class Baseball : MonoBehaviour
                     FindFirstObjectByType<SwingFeedback>().SpawnSwingFeedback(SwingFeedback.SwingFeedbackType.Perfect);
                 }
 
+                GameObject boom = Instantiate(boomParticle);
+                boom.transform.position = this.transform.position;
+
                 switch (pitchType)
                 {
                     case ThrowType.PitchType.FASTBALL:
@@ -274,13 +276,6 @@ public class Baseball : MonoBehaviour
                         Debug.Log("Unknown pitch type, unknown hit type...");
                         SetState(BaseballState.HIT);
                         break;
-                }
-            }
-            else
-            {
-                if (FindFirstObjectByType<SwingFeedback>() != null)
-                {
-                    //FindFirstObjectByType<SwingFeedback>().SpawnSwingFeedback(SwingFeedback.SwingFeedbackType.TooSlow);
                 }
             }
         }
