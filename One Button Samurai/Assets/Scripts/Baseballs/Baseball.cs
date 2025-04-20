@@ -42,6 +42,7 @@ public class Baseball : MonoBehaviour
     [Range(0f,1f)]
     public float minSwingSpeed = 0.5f;
     public GameObject boomParticle;
+    public int hitVelocity = 0;
 
     [Header("Hit State")]
     public float hitTimeAlive = 0.5f;
@@ -243,31 +244,29 @@ public class Baseball : MonoBehaviour
     {
         windowTime += Time.deltaTime;
 
-        // if player swings in time
-        if (FindAnyObjectByType<BatterSwing>().IsAtMaxSwing(out float battingSpeed))
+        // window open whole time
+        if(windowTime >= swingWindow)
         {
+            positioningGuide.localScale = Vector3.zero;
 
-            if (battingSpeed >= minSwingSpeed) 
+            if (hitVelocity > 0)
             {
-                positioningGuide.localScale = Vector3.zero;
-                if (FindFirstObjectByType<SwingFeedback>() != null)
-                {
-                    FindFirstObjectByType<SwingFeedback>().SpawnSwingFeedback(SwingFeedback.SwingFeedbackType.Perfect);
-                }
-
-                GameObject boom = Instantiate(boomParticle);
-                boom.transform.position = this.transform.position;
-
                 switch (pitchType)
                 {
                     case ThrowType.PitchType.FASTBALL:
-                        SetState(BaseballState.HIT, HitState.HOMERUN);
+                        if(hitVelocity > 2) { SetState(BaseballState.HIT, HitState.HOMERUN); }
+                        else if(hitVelocity > 1) { SetState(BaseballState.HIT, HitState.OUTSIDE); }
+                        else { SetState(BaseballState.HIT, HitState.INSIDE); }
                         break;
                     case ThrowType.PitchType.CURVEBALL:
-                        SetState(BaseballState.HIT, HitState.HOMERUN);
+                        if(hitVelocity > 3) { SetState(BaseballState.HIT, HitState.HOMERUN); }
+                        else if(hitVelocity > 2) { SetState(BaseballState.HIT, HitState.OUTSIDE); }
+                        else { SetState(BaseballState.HIT, HitState.INSIDE); }
                         break;
                     case ThrowType.PitchType.SCREWBALL:
-                        SetState(BaseballState.HIT, HitState.HOMERUN);
+                        if (hitVelocity > 4) { SetState(BaseballState.HIT, HitState.HOMERUN); }
+                        else if (hitVelocity > 2) { SetState(BaseballState.HIT, HitState.OUTSIDE); }
+                        else { SetState(BaseballState.HIT, HitState.INSIDE); }
                         break;
                     case ThrowType.PitchType.SPLITTER:
                         SetState(BaseballState.HIT, HitState.GROUNDBALL);
@@ -278,13 +277,32 @@ public class Baseball : MonoBehaviour
                         break;
                 }
             }
+            else 
+            { 
+                SetState(BaseballState.MISS); 
+            }
         }
+    }
 
-        // window open whole time
-        if(windowTime >= swingWindow)
+    public void HitBall()
+    {
+        if (state == BaseballState.HITWINDOW)
         {
-            positioningGuide.localScale = Vector3.zero;
-            SetState(BaseballState.MISS);
+            hitVelocity++;
+
+            GameObject boom = Instantiate(boomParticle);
+            boom.transform.position = this.transform.position;
+            ParticleSystem[] particles = boom.GetComponentsInChildren<ParticleSystem>();
+            foreach (ParticleSystem particle in particles)
+            {
+                var ss = particle.main;
+                ss.startSize = ss.startSize.constant * hitVelocity;
+            }
+
+            if(pitchType == ThrowType.PitchType.SPLITTER)
+            {
+                SetState(BaseballState.HIT, HitState.GROUNDBALL);
+            }
         }
     }
 

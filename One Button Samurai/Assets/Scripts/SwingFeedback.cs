@@ -47,6 +47,11 @@ public class SwingFeedback : MonoBehaviour
                         {
                             SpawnSwingFeedback(SwingFeedbackType.TooSlow);
                         }
+                        else
+                        {
+                            SpawnSwingFeedback(SwingFeedbackType.Perfect);
+                            ball.HitBall();
+                        }
                         break;
                     default:
                         Debug.Log("No corresponding swing feedback type.");

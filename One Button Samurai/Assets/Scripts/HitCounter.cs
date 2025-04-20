@@ -18,18 +18,32 @@ public class HitCounter : MonoBehaviour
 
     // ui
     public TMP_Text counter;
+    private Animator counterAnim;
     public TMP_Text streakCounter;
+    private Animator streakAnim;
     public TMP_Text scoreText;
+    private Animator scoreAnim;
+    public TMP_Text scoreIncreaseText;
+    private Animator scoreIncreaseAnim;
     public float timeToIncreaseScore = 1f;
 
     private void Start()
     {
         SceneHandler.onSceneChange += SaveHitCountToPlayerPrefs;
+
+        counterAnim = counter.gameObject.GetComponent<Animator>();
+        streakAnim = streakCounter.gameObject.GetComponent<Animator>();
+        scoreAnim = scoreText.gameObject.GetComponent<Animator>();
+        scoreIncreaseAnim = scoreIncreaseText.gameObject.GetComponent<Animator>();
     }
 
     void Update()
     {
-        counter.text = hits.ToString();
+        if(counter.text != hits.ToString())
+        {
+            counter.text = hits.ToString();
+            counterAnim.SetTrigger("jump");
+        }
         StreakUpdate();
     }
 
@@ -41,7 +55,11 @@ public class HitCounter : MonoBehaviour
         }
         else
         {
-            streakCounter.text = streak.ToString();
+            if(streakCounter.text != streak.ToString())
+            {
+                streakCounter.text = streak.ToString();
+                streakAnim.SetTrigger("jump");
+            }
         }
     }
 
@@ -78,6 +96,9 @@ public class HitCounter : MonoBehaviour
 
         int currentScore;
 
+        scoreIncreaseText.text = "+" + amount.ToString();
+        scoreIncreaseAnim.SetTrigger("show");
+
         while (timePassed < timeToIncreaseScore)
         {
             yield return null;
@@ -85,6 +106,7 @@ public class HitCounter : MonoBehaviour
             timePassed += Time.deltaTime;
             currentScore = (int) Mathf.Lerp(startScore, endScore, timePassed / timeToIncreaseScore);
             scoreText.text = currentScore.ToString();
+            scoreAnim.SetTrigger("jump");
         }
 
         scoreText.text = score.ToString();
@@ -93,6 +115,7 @@ public class HitCounter : MonoBehaviour
     public void ResetStreak()
     {
         streak = 0;
+        streakAnim.SetTrigger("jump");
     }
 
     void SaveHitCountToPlayerPrefs()
