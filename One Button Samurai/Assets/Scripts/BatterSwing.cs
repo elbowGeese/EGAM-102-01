@@ -20,6 +20,8 @@ public class BatterSwing : MonoBehaviour
     private float battingSpeed = 0f;
 
     public Transform mouseFollow;
+    public AudioSource audioSource;
+    public float minSpeedToSFX;
 
     private void Awake()
     {
@@ -65,6 +67,11 @@ public class BatterSwing : MonoBehaviour
 
         // play animation at the time index
         anim.Play(swingClip.name, animLayer, timeIndex);
+
+        if(battingSpeed > minSpeedToSFX || battingSpeed < -minSpeedToSFX)
+        {
+            if (!audioSource.isPlaying) { audioSource.Play(); }
+        }
     }
 
     float GetCurrentAnimatorTime()

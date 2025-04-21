@@ -43,6 +43,9 @@ public class Baseball : MonoBehaviour
     public float minSwingSpeed = 0.5f;
     public GameObject boomParticle;
     public int hitVelocity = 0;
+    private AudioSource hitSound;
+    private float sfxMinPitch = 0.9f;
+    private float sfxMaxPitch = 1.1f;
 
     [Header("Hit State")]
     public float hitTimeAlive = 0.5f;
@@ -52,21 +55,29 @@ public class Baseball : MonoBehaviour
     private Vector2 hitInitPos;
     private Vector2 hitTargetPos;
 
+    public AudioSource powerUpAudio;
+    public AudioClip powerUpLesser;
+    public AudioClip powerUpGreater;
+
     [Header("Hit State : Homerun")]
     public float minHomerunY = 6f;
     public float maxHomerunY = 8f;
+    public float pitchHomerun = 1.2f;
 
     [Header("Hit State : Outside")]
     public float minOutsideY = 4f;
     public float maxOutsideY = 6f;
+    public float pitchOutside = 1.1f;
 
     [Header("Hit State : Inside")]
     public float minInsideY = 0f;
     public float maxInsideY = 4f;
+    public float pitchInside = 1f;
 
     [Header("Hit State : Ground Ball")]
     public float minGroundballY = -4;
     public float maxGroundballY = -2;
+    public float pitchGroundball = 0.9f;
 
     [Header("Miss State")]
     private float timeToFadeOut = 0f;
@@ -74,6 +85,7 @@ public class Baseball : MonoBehaviour
     private void Start()
     {
         sp = GetComponent<SpriteRenderer>();
+        hitSound = GetComponent<AudioSource>();
 
         transform.Rotate(new Vector3(0, 0, 1) * Random.Range(0, 360));
 
@@ -127,26 +139,50 @@ public class Baseball : MonoBehaviour
                 hitInitSize = transform.localScale;
                 hitInitPos = transform.position;
 
+                string message = "";
                 float randY = 0f;
                 switch (hitState)
                 {
                     case HitState.INSIDE:
                         randY = Random.Range(minInsideY, maxInsideY);
+
+                        powerUpAudio.clip = powerUpLesser;
+                        powerUpAudio.pitch = pitchInside;
+
+                        message = "Inside!";
                         break;
                     case HitState.OUTSIDE:
                         randY = Random.Range(minOutsideY, maxOutsideY);
+
+                        powerUpAudio.clip = powerUpLesser;
+                        powerUpAudio.pitch = pitchOutside;
+
+                        message = "Outside!";
                         break;
                     case HitState.HOMERUN:
                         randY = Random.Range(minHomerunY, maxHomerunY);
+
+                        powerUpAudio.clip = powerUpGreater;
+                        powerUpAudio.pitch = pitchHomerun;
+
+                        message = "Homerun!";
                         break;
                     case HitState.GROUNDBALL:
                         randY = Random.Range(minGroundballY, maxGroundballY);
+
+                        powerUpAudio.clip = powerUpLesser;
+                        powerUpAudio.pitch = pitchGroundball;
+
+                        message = "Ground Ball!";
                         break;
                     default:
                         Debug.Log("No hit state range to target.");
                         break;
                 }
+
                 hitTargetPos = new Vector2(Random.Range(-hitTargetPosOffsetX, hitTargetPosOffsetX), randY);
+                powerUpAudio.Play();
+                if (FindFirstObjectByType<HitStateFeedback>()) { FindFirstObjectByType<HitStateFeedback>().ShowFeedback(message); }
 
                 break;
             case BaseballState.MISS:
@@ -298,6 +334,9 @@ public class Baseball : MonoBehaviour
                 var ss = particle.main;
                 ss.startSize = ss.startSize.constant * hitVelocity;
             }
+
+            hitSound.pitch = Random.Range(sfxMinPitch, sfxMaxPitch);
+            hitSound.Play();
 
             if(pitchType == ThrowType.PitchType.SPLITTER)
             {
