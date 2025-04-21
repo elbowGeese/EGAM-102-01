@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class BatterSwing : MonoBehaviour
 {
-    public float maxX = 13f;
-    public float minX = -3f;
+    float maxX = Screen.width * 0.9f;
+    float minX = Screen.width * 0.1f;
     public float speed = 10f;
 
     private Animator anim;
@@ -16,6 +16,8 @@ public class BatterSwing : MonoBehaviour
     public AnimationClip swingClip;
     int swingClipHash = Animator.StringToHash("Base Layer" + ".tempPlayer_swing");
 
+    private float mousePreviousX;
+    private float previousMouseX;
     private float battingSpeed = 0f;
 
     public Transform mouseFollow;
@@ -31,6 +33,7 @@ public class BatterSwing : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         anim.speed = 0f;
+        previousMouseX = Input.mousePosition.x;
     }
 
     void Update()
@@ -41,9 +44,10 @@ public class BatterSwing : MonoBehaviour
         // unpaused
 
         // get new progress to lerp to based on mouse follow position
-        float mousePosX = mouseFollow.position.x;
-        float newProgress = Mathf.InverseLerp(minX, maxX, mousePosX);
-        battingSpeed = Input.GetAxis("Mouse X") / Time.deltaTime;
+        
+        float newProgress = Mathf.InverseLerp(minX, maxX, Input.mousePosition.x);
+        battingSpeed = Input.mousePosition.x - previousMouseX;
+        previousMouseX = Input.mousePosition.x;
 
         // get the animation's current progress
         float currentProgress = GetCurrentAnimatorTime();
