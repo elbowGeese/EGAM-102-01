@@ -2522,7 +2522,7 @@ MonoBehaviour:
   swingClip: {fileID: 7400000, guid: 76a20b144b350fc419cf1f569d2d2910, type: 2}
   mouseFollow: {fileID: 756588335}
   audioSource: {fileID: 478694855}
-  minSpeedToSFX: 3
+  minSpeedToSFX: 300
 --- !u!114 &672018920
 MonoBehaviour:
   m_ObjectHideFlags: 0

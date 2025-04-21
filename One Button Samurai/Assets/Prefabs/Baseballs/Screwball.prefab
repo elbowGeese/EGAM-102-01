@@ -477,7 +477,7 @@ MonoBehaviour:
   targetPosOffset: 0.3
   timeAlive: 1
   swingWindow: 0.2
-  minSwingSpeed: 0.1
+  minSwingSpeed: 0.01
   boomParticle: {fileID: 6061163360483411013, guid: 720bfcfea263c1d449c17944a9ae133c, type: 3}
   hitVelocity: 0
   hitTimeAlive: 0.25

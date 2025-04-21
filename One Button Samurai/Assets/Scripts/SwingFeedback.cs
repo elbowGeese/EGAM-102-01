@@ -26,7 +26,7 @@ public class SwingFeedback : MonoBehaviour
         if (PauseHandler.instance.pauseMenu.activeSelf) { return; }
 
         // unpaused
-        Baseball ball = FindAnyObjectByType<Baseball>();
+        Baseball ball = FindFirstObjectByType<Baseball>();
         if (ball != null)
         {
             if (!isSwung && bat.IsAtMaxSwing(out float battingSpeed))
@@ -43,14 +43,15 @@ public class SwingFeedback : MonoBehaviour
                         SpawnSwingFeedback(SwingFeedbackType.TooLate);
                         break;
                     case Baseball.BaseballState.HITWINDOW:
-                        if (battingSpeed < ball.minSwingSpeed)
-                        {
-                            SpawnSwingFeedback(SwingFeedbackType.TooSlow);
-                        }
-                        else
+                        Debug.Log("SwingFeedback: " + battingSpeed + " ?> " + ball.minSwingSpeed + " is " + (battingSpeed > ball.minSwingSpeed).ToString());
+                        if (battingSpeed > ball.minSwingSpeed)
                         {
                             SpawnSwingFeedback(SwingFeedbackType.Perfect);
                             ball.HitBall();
+                        }
+                        else
+                        {
+                            SpawnSwingFeedback(SwingFeedbackType.TooSlow);
                         }
                         break;
                     default:
